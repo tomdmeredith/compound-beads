@@ -12,6 +12,15 @@
 
 ---
 
+## Success Criteria Evaluation
+
+| Criterion | Target | Actual | Status |
+|-----------|--------|--------|--------|
+| [Criterion 1] | [Target] | [Actual] | Pass/Fail |
+| [Criterion 2] | [Target] | [Actual] | Pass/Fail |
+
+---
+
 ## Tasks Completed
 
 - [x] [Task 1]
@@ -43,6 +52,14 @@
 |----------|-----------|
 | [Decision 1] | [Why] |
 | [Decision 2] | [Why] |
+
+---
+
+## Error Analysis (if applicable)
+
+| Error | Root Cause | Action Taken | Result |
+|-------|------------|--------------|--------|
+| [What failed] | [5 Whys result] | [Fix applied] | [Outcome] |
 
 ---
 

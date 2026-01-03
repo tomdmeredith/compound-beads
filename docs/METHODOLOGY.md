@@ -136,7 +136,7 @@ Building a monitoring dashboard? Ask:
 
 ---
 
-## The 4-Phase Cycle
+## The 5-Phase Cycle
 
 Every round follows this pattern:
 
@@ -156,7 +156,7 @@ Deep dive into the problem:
 - Read existing code/documentation
 - Identify constraints and requirements
 - List edge cases
-- Define success criteria
+- **Define success criteria** (what does "done" look like?)
 
 ### Phase 3: Implementation
 
@@ -167,7 +167,19 @@ Build the solution:
 - Handle edge cases
 - Integrate with existing code
 
-### Phase 4: Documentation
+### Phase 4: Evaluation
+
+Measure against success criteria:
+
+- Compare actual outcomes to targets
+- Document what worked and what didn't
+- Perform error analysis on failures
+- Identify root causes, not just symptoms
+- Prioritize next improvements based on data
+
+See [EVALS_GUIDE.md](./EVALS_GUIDE.md) for detailed evaluation techniques.
+
+### Phase 5: Documentation
 
 Capture the work:
 
@@ -175,6 +187,7 @@ Capture the work:
 - Add inline code comments for round-specific changes
 - Update relevant docs
 - Compress previous round if needed
+- Include error analysis findings
 
 ---
 
@@ -276,6 +289,7 @@ Standardized workflow commands in `.claude/commands/`:
 | `/ready` | Session start | Load context, orient |
 | `/plan` | Before complex work | Enter planning mode |
 | `/work` | During implementation | Execution checkpoints |
+| `/eval` | After implementation | Evaluate against success criteria |
 | `/review` | Before finishing | Quality gates |
 | `/land` | Session end | Compress, document, handoff |
 | `/panel` | New problem domain | Facilitate expert panel |
@@ -324,6 +338,73 @@ Fix: Update immediately after completing tasks.
 
 Only consulting domain experts, missing patterns.
 Fix: Always include 2-3 "irrelevant" experts in panels.
+
+---
+
+## Evals-Driven Development
+
+> **"The single biggest predictor of how rapidly a team makes progress building an AI agent lay in their ability to drive a disciplined process for evals (measuring the system's performance) and error analysis (identifying the causes of errors)."**
+> — Andrew Ng, DeepLearning.AI
+
+### Why Evals Matter
+
+Teams that DON'T do this:
+- Spend months tweaking with little progress
+- Hit performance ceilings they can't break through
+- Guess what to work on instead of letting data guide them
+
+Teams that DO this:
+- Efficiently home in on which components to improve
+- Make faster progress with less wasted effort
+- Compound improvements over time
+
+### The Musicians vs. Fumblers Analogy
+
+| Domain | What Winners Do | What Losers Do |
+|--------|-----------------|----------------|
+| **Music** | Identify stumbling points, practice those | Play start-to-end repeatedly |
+| **Health** | Get bloodwork, see what's amiss | Chase nutrition fads |
+| **Sports** | Review game films, spot gaps | Practice trick shots |
+| **AI/Software** | Use error analysis to find gaps | Stack buzzy techniques from social media |
+
+### Defining Success Criteria
+
+Before starting implementation, define measurable outcomes:
+
+```markdown
+### Success Criteria
+
+| Criterion | Metric | Target |
+|-----------|--------|--------|
+| Speed | Response time | <500ms |
+| Accuracy | Match quality | >85% |
+| Coverage | Results found | 50+ |
+```
+
+### Error Analysis Process
+
+When something fails or underperforms:
+
+1. **Observe** - What actually happened vs. expected?
+2. **Categorize** - What type of failure is this?
+3. **Root Cause** - Why did this happen? (5 Whys technique)
+4. **Action** - What change will fix the root cause?
+5. **Verify** - Did the fix work?
+
+```markdown
+### Error Analysis
+
+| Error | Root Cause | Action | Result |
+|-------|------------|--------|--------|
+| Low accuracy | FAANG bias in ICP | Removed, added Company DNA | ✅ +23% |
+| Missing results | Single-hop search | Added multi-hop expansion | ✅ +15 results |
+```
+
+### Key Principle
+
+> "To improve your agentic AI system, don't just stack up the latest buzzy techniques that just went viral on social media. Instead, use error analysis to figure out where it's falling short, and focus on that."
+
+See [EVALS_GUIDE.md](./EVALS_GUIDE.md) for comprehensive evaluation techniques.
 
 ---
 
@@ -378,6 +459,7 @@ is better than hard limits. Legitimate users burst; abusers sustain.
 
 ## See Also
 
+- [EVALS_GUIDE.md](./EVALS_GUIDE.md) - Comprehensive evals and error analysis guide
 - [EXPERT_PANEL_GUIDE.md](./EXPERT_PANEL_GUIDE.md) - Deep dive on expert panels
 - [ROUND_MANAGEMENT.md](./ROUND_MANAGEMENT.md) - Round lifecycle details
 - [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) - One-page cheat sheet

@@ -61,6 +61,7 @@
 | `/ready` | Session start |
 | `/plan` | Complex work |
 | `/work` | During implementation |
+| `/eval` | After implementation |
 | `/review` | Before finishing |
 | `/land` | Session end |
 | `/panel` | New problem domain |
@@ -80,13 +81,14 @@
 
 ---
 
-## The 4-Phase Cycle
+## The 5-Phase Cycle
 
 ```
-1. EXPERT PANEL   → Fresh perspectives
-2. ANALYSIS       → Deep problem dive
-3. IMPLEMENTATION → Build solution
-4. DOCUMENTATION  → Capture learnings
+1. EXPERT PANEL     → Fresh perspectives
+2. ANALYSIS         → Deep dive + define success criteria
+3. IMPLEMENTATION   → Build solution
+4. EVALUATION       → Measure against criteria
+5. DOCUMENTATION    → Capture learnings + error analysis
 ```
 
 ---
@@ -113,6 +115,28 @@ Examples:
 
 ---
 
+## Evals Quick Reference
+
+**Before starting:**
+```markdown
+| Criterion | Metric | Target |
+|-----------|--------|--------|
+```
+
+**After implementation:**
+```markdown
+| Criterion | Target | Actual | Status |
+|-----------|--------|--------|--------|
+```
+
+**For failures (5 Whys):**
+```markdown
+| Error | Root Cause | Action |
+|-------|------------|--------|
+```
+
+---
+
 ## Key Principles
 
 1. **Document as you go** - Not after
@@ -120,6 +144,7 @@ Examples:
 3. **One goal per round** - Stay focused
 4. **Update CLAUDE.md** - Every round
 5. **Consult irrelevant experts** - Break blindness
+6. **Measure, don't guess** - Define success criteria
 
 ---
 

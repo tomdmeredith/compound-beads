@@ -26,6 +26,7 @@ Then start Claude Code and run `/ready` to begin your first round.
 compound-beads/
 ├── docs/
 │   ├── METHODOLOGY.md          # Full methodology reference
+│   ├── EVALS_GUIDE.md          # Evals and error analysis (Andrew Ng framework)
 │   ├── EXPERT_PANEL_GUIDE.md   # The "irrelevant expert" technique
 │   ├── ROUND_MANAGEMENT.md     # Working with rounds
 │   └── QUICK_REFERENCE.md      # One-page cheat sheet
@@ -33,6 +34,7 @@ compound-beads/
 ├── templates/
 │   ├── CLAUDE.md               # Agent handoff document template
 │   ├── PLAN_FILE.md            # Plan file template
+│   ├── EVALUATION_RECORD.md    # Detailed eval documentation
 │   ├── EXPERT_PANEL_RECORD.md  # Panel documentation
 │   └── ROUND_ACCOMPLISHMENTS.md
 │
@@ -41,6 +43,7 @@ compound-beads/
 │   │   ├── ready.md            # Session start
 │   │   ├── plan.md             # Planning workflow
 │   │   ├── work.md             # Execution guidelines
+│   │   ├── eval.md             # Evaluate against criteria
 │   │   ├── review.md           # Quality gates
 │   │   ├── land.md             # Session end
 │   │   └── panel.md            # Expert panel facilitation
@@ -97,16 +100,19 @@ The secret weapon. Consult experts from **unrelated fields** who deal with simil
 
 This surfaces insights domain experts miss. See [Expert Panel Guide](./docs/EXPERT_PANEL_GUIDE.md).
 
-## The 4-Phase Pattern
+## The 5-Phase Pattern
 
 Every round follows this cycle:
 
 ```
-1. EXPERT PANEL   → Fresh perspectives from "irrelevant" fields
-2. ANALYSIS       → Deep dive into problem space
-3. IMPLEMENTATION → Build the solution
-4. DOCUMENTATION  → Capture learnings, update CLAUDE.md
+1. EXPERT PANEL     → Fresh perspectives from "irrelevant" fields
+2. ANALYSIS         → Deep dive + define success criteria
+3. IMPLEMENTATION   → Build the solution
+4. EVALUATION       → Measure against criteria, error analysis
+5. DOCUMENTATION    → Capture learnings, update CLAUDE.md
 ```
+
+The **Evaluation** phase is based on Andrew Ng's insight that _"the single biggest predictor of how rapidly a team makes progress building an AI agent lay in their ability to drive a disciplined process for evals and error analysis."_ See [EVALS_GUIDE.md](./docs/EVALS_GUIDE.md).
 
 ## CLAUDE.md Structure
 
@@ -131,6 +137,7 @@ See [templates/CLAUDE.md](./templates/CLAUDE.md) for the full template.
 | `/ready` | Start a session - reads CLAUDE.md, shows context |
 | `/plan` | Enter planning mode for complex work |
 | `/work` | Execution guidelines and checkpoints |
+| `/eval` | Evaluate against success criteria, error analysis |
 | `/review` | Quality gates before finishing |
 | `/land` | End session - compress rounds, update docs |
 | `/panel` | Facilitate an irrelevant expert panel |
@@ -140,8 +147,9 @@ See [templates/CLAUDE.md](./templates/CLAUDE.md) for the full template.
 1. **Context survives** - CLAUDE.md carries forward across sessions
 2. **Knowledge compounds** - Each round builds on all previous work
 3. **Fresh perspectives** - Expert panels break domain blindness
-4. **Structure without rigidity** - Flexible enough for any project type
-5. **AI-native** - Designed for human+AI collaboration
+4. **Data-driven progress** - Evals and error analysis prevent wheel-spinning
+5. **Structure without rigidity** - Flexible enough for any project type
+6. **AI-native** - Designed for human+AI collaboration
 
 ## Proven at Scale
 

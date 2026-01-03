@@ -43,9 +43,30 @@
 > **Methodology**: [Approach/technique used]
 > **Goal**: [Measurable outcome]
 
+#### Success Criteria
+
+| Criterion | Metric | Target |
+|-----------|--------|--------|
+| [Criterion 1] | [How to measure] | [Target value] |
+| [Criterion 2] | [How to measure] | [Target value] |
+
+#### Tasks
+
 - [ ] Task 1
 - [ ] Task 2
 - [ ] Task 3
+
+#### Evaluation
+
+| Criterion | Target | Actual | Status |
+|-----------|--------|--------|--------|
+| [Criterion 1] | [Target] | [Actual] | [Pass/Fail] |
+
+#### Error Analysis (if applicable)
+
+| Error | Root Cause | Action |
+|-------|------------|--------|
+| [What went wrong] | [5 Whys result] | [Fix applied] |
 
 **Key Insight:** [To be filled after round completion]
 
@@ -124,11 +145,12 @@ npm run test     # Run tests
 
 This project uses iterative "rounds" - each building on the previous like beads on a string.
 
-### Core Pattern
+### Core Pattern (5-Phase Cycle)
 1. **Expert Panel** - Consult "irrelevant" experts for fresh perspectives
-2. **Analysis** - Deep dive into problem space
+2. **Analysis** - Deep dive into problem space + define success criteria
 3. **Implementation** - Build the solution
-4. **Documentation** - Capture learnings
+4. **Evaluation** - Measure against criteria, error analysis
+5. **Documentation** - Capture learnings
 
 ### Round History (Summary)
 | Round | Focus | Key Outcome |
