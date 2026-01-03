@@ -1,0 +1,10 @@
+# Plans Directory
+
+This directory holds plan files for complex work.
+
+Plan files use the naming convention: `[adjective]-[verb]-[noun].md`
+
+Examples:
+- dynamic-seeking-backus.md
+- curious-dancing-hopper.md
+- swift-building-lovelace.md

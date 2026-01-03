@@ -1,0 +1,144 @@
+# CloneICP - Agent Handoff Document
+
+> Last Updated: January 2, 2026
+> Current Round: 34 (Opus-Powered Semantic Query Generation)
+
+## Quick Context
+
+CloneICP is a semantic people search tool that finds "twins" of your best customers using Exa AI. Users paste LinkedIn URLs of ideal customers, and the system finds similar professionals.
+
+**Positioning:** Discovery tool (like Sales Navigator), NOT enrichment tool (like Apollo/ZoomInfo)
+
+## Documentation
+
+### Technical Architecture
+
+| Document | Purpose |
+|----------|---------|
+| `/docs/TECHNICAL_ARCHITECTURE.md` | System Overview - Tech stack, data flow, database schema |
+| `/docs/LLM_INTEGRATION.md` | Claude Prompts - Complete prompts, ICP extraction, query building |
+| `/docs/EXA_INTEGRATION.md` | Search Algorithm - 6-phase pipeline, API methods, costs |
+| `/docs/SCORING_SYSTEM.md` | Scoring - Multi-signal scoring, weights, quality tiers |
+
+### Go-To-Market
+
+| Document | Purpose |
+|----------|---------|
+| `/docs/PRODUCT_OVERVIEW.md` | What CloneICP does, value prop, use cases |
+| `/docs/SALES_PLAYBOOK.md` | Positioning, objection handling, competitive diff |
+| `/docs/CUSTOMER_SUCCESS_GUIDE.md` | Onboarding, getting value, troubleshooting |
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `/src/lib/exa.ts` | Exa API integration (with cost tracking) |
+| `/src/lib/llm.ts` | Claude/Anthropic integration |
+| `/src/lib/scoring.ts` | Multi-signal scoring system |
+| `/src/app/page.tsx` | Main search UI |
+| `/src/app/api/search/route.ts` | Search API endpoint |
+
+---
+
+## Current Work (Round 34)
+
+### Round 34: Opus-Powered Semantic Query Generation
+
+> **Methodology**: Let Opus REASON about optimal Exa queries using 253 experiment learnings
+> **Goal**: Smarter queries → Better twins → Tribal signal matching
+
+**Core Principle:** Instead of hard-coded query patterns, Opus reasons about optimal queries for each profile.
+
+- [x] Added `TribalSignal` and `GeneratedQueries` interfaces
+- [x] Created `generateOptimalExaQueries()` with extended thinking
+- [x] Added Phase 5.6 to search pipeline for Opus queries
+- [x] Created `scoreTribalAlignment()` (0-25 pts per candidate)
+- [x] Added tribal consensus detection across seeds
+- [x] Updated Pattern Reveal with "Shared Language" section
+
+**Key Insight:** By feeding Opus all experiment learnings, it reasons about optimal queries per profile. A profile with AWS certification triggers "Certification + Role" pattern. Opus stacks signals intelligently.
+
+---
+
+## Previous Round (Round 33)
+
+### Round 33 Accomplishments (Critical Security & Growth)
+
+Fixed critical issues from multi-expert audit:
+
+- CSRF timing attack fix with `crypto.timingSafeEqual`
+- Secret redaction in logs
+- Email pipeline fixed (was localStorage-only, now persists to DB)
+- Per-user rate limiting (prevents shared IP interference)
+
+**Key Insight:** Email capture to localStorage was losing 20-40% of leads. Always persist critical data to database.
+
+---
+
+## Earlier Rounds
+
+| Round | Focus | Key Outcome |
+|-------|-------|-------------|
+| 32 | Company Context | Post-search company context prompt, value-first UX |
+| 31 | Deep Insight Engine | Stats → narratives, insight-to-query translation |
+| 30 | Audit Bug Fixes | Security hardening, Pattern Reveal rich signals |
+| 29 | Value Explosion | Remove FAANG bias, Company DNA framework |
+| 28 | Universal Intent | Intent query for all searches, 2-seed support |
+| 27 | Cost Optimization | Exa 25-result limits (58-75% savings) |
+| 26 | Admin Dashboard | Customer Success Dashboard, cost tracking |
+| 24-25 | Multi-Seed | Consensus query, business intent |
+| 22-23 | Bug Fixes | Env timing, memory leaks, atomic usage |
+| 20-21 | Pricing | Tier structure, margin targets |
+| 15-19 | Quality | Scoring system, deduplication, edge cases |
+| 11-14 | Algorithm | Multi-hop, two-phase search |
+| 1-10 | Foundation | Basic Exa search, LinkedIn parsing |
+
+---
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, Tailwind 4
+- **Auth**: Supabase Auth
+- **Database**: Supabase (Postgres)
+- **APIs**: Exa AI, Anthropic Claude
+- **Payments**: Stripe
+- **Hosting**: Vercel
+
+---
+
+## How to Continue
+
+1. Read this CLAUDE.md for context
+2. Check Current Work section for active tasks
+3. Check `/.claude/plans/` for any active plan files
+4. Run `npm run dev`
+
+### Key Commands
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+```
+
+---
+
+## Compound Beads Methodology
+
+This project uses iterative "rounds" - each building on the previous like beads on a string.
+
+### Core Pattern
+1. **Expert Panel** - Consult "irrelevant" experts for fresh perspectives
+2. **Analysis** - Deep dive into problem space
+3. **Implementation** - Build the solution
+4. **Documentation** - Capture learnings
+
+### How to Start a New Round
+1. Read CLAUDE.md for context
+2. Define round goal clearly
+3. Optionally convene expert panel
+4. Implement and document
+5. Update CLAUDE.md with accomplishments
+
+---
+
+*This is a condensed example from a real 34-round project. The actual CLAUDE.md is ~700 lines.*
