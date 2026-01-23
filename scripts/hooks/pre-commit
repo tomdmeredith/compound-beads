@@ -1,0 +1,80 @@
+#!/bin/bash
+#
+# Compound Beads Pre-Commit Hook
+# WARNING level - reminds but doesn't block
+#
+# Install with: ./scripts/hooks/install.sh
+
+# Colors for output
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Check if this is a Compound Beads project
+if [ ! -d ".compound-beads" ]; then
+    exit 0  # Not a Compound Beads project, skip
+fi
+
+# Get current round from context.md
+CURRENT_ROUND=""
+if [ -f ".compound-beads/context.md" ]; then
+    CURRENT_ROUND=$(grep -m1 "Display ID" .compound-beads/context.md | grep -oE "Round [0-9]+" | head -1)
+fi
+
+echo -e "${BLUE}[Compound Beads]${NC} Pre-commit check..."
+
+WARNINGS=0
+
+# Check 1: Are staged files logged in context.md?
+STAGED_FILES=$(git diff --cached --name-only)
+if [ -n "$STAGED_FILES" ] && [ -f ".compound-beads/context.md" ]; then
+    UNLOGGED=""
+    for file in $STAGED_FILES; do
+        if ! grep -q "$file" .compound-beads/context.md; then
+            UNLOGGED="$UNLOGGED\n  - $file"
+        fi
+    done
+    if [ -n "$UNLOGGED" ]; then
+        echo -e "${YELLOW}WARNING:${NC} These staged files aren't logged in context.md:$UNLOGGED"
+        echo -e "Consider updating Modified Files section."
+        WARNINGS=$((WARNINGS + 1))
+    fi
+fi
+
+# Check 2: Is CLAUDE.md being updated with the commit?
+if [ -n "$STAGED_FILES" ]; then
+    CODE_CHANGED=false
+    CLAUDE_STAGED=false
+
+    for file in $STAGED_FILES; do
+        case "$file" in
+            *.ts|*.tsx|*.js|*.jsx|*.py|*.rb|*.go|*.rs)
+                CODE_CHANGED=true
+                ;;
+            CLAUDE.md)
+                CLAUDE_STAGED=true
+                ;;
+        esac
+    done
+
+    if $CODE_CHANGED && ! $CLAUDE_STAGED; then
+        echo -e "${YELLOW}WARNING:${NC} Code changes without CLAUDE.md update."
+        echo -e "Consider documenting this work in CLAUDE.md."
+        WARNINGS=$((WARNINGS + 1))
+    fi
+fi
+
+# Check 3: Suggest round reference in commit message
+if [ -n "$CURRENT_ROUND" ]; then
+    echo -e "${BLUE}TIP:${NC} Current round is $CURRENT_ROUND"
+    echo -e "Consider using commit message format: [$CURRENT_ROUND] Description"
+fi
+
+if [ $WARNINGS -gt 0 ]; then
+    echo ""
+    echo -e "${YELLOW}$WARNINGS warning(s) found.${NC} Proceeding anyway."
+    echo -e "Use --no-verify to skip this check."
+fi
+
+# Always allow commit (WARNING level, not blocking)
+exit 0

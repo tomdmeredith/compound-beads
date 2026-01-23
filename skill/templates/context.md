@@ -32,9 +32,10 @@ I read this file to understand the current state and continue work seamlessly.
 
 - **Display ID**: Round [N]
 - **Machine ID**: cb-[XXXX]
+- **Type**: [feature | bug_fix | triage | polish | infrastructure]
 - **Goal**: [CURRENT_GOAL]
 - **Status**: [pending | in_progress | complete]
-- **Expert Panel Status**: [required | not_required | completed]
+- **Expert Panel Status**: [not_required | completed] *(optional - use when stuck)*
 - **Started**: [ISO_TIMESTAMP]
 
 ## Modified Files This Round
@@ -56,18 +57,21 @@ Tasks waiting on something:
 
 ## My Guidelines
 
-### When to Consider Expert Panel
-- New user-facing features → YES
-- Pricing/business model changes → YES
-- Security-related changes → YES
-- Architectural refactoring → YES
-- Bug fixes, documentation → NO
+### When to Consider Expert Panel (Optional Tool)
+Expert panels are useful when genuinely stuck or facing novel problems.
+- Feeling blocked with no clear path forward → Consider panel
+- Novel problem domain with no prior art → Consider panel
+- Regular feature/bug work → Skip panel
 
 ### Auto-Triggers I Watch For
 - Context window > 80% full → Run handoff protocol
 - Round has > 5 file modifications → Update this file
 - CLAUDE.md "Current Round" differs from here → Offer to sync
 - Round marked complete → Prompt for Compound phase
+- Session ending detected → Run session close protocol
+- Significant work completed → Offer to update CLAUDE.md
+- Pattern discovered → Offer to add to learnings.md
+- Bead open > 7 days → Prompt: close, defer, or update?
 
 ### Memory Management
 - If this file > 5000 chars → Archive old rounds

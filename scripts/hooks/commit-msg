@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Compound Beads Commit Message Hook
+# WARNING level - suggests format but doesn't block
+#
+# Install with: ./scripts/hooks/install.sh
+
+# Colors for output
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Check if this is a Compound Beads project
+if [ ! -d ".compound-beads" ]; then
+    exit 0  # Not a Compound Beads project, skip
+fi
+
+# Get current round from context.md
+CURRENT_ROUND=""
+if [ -f ".compound-beads/context.md" ]; then
+    CURRENT_ROUND=$(grep -m1 "Display ID" .compound-beads/context.md | grep -oE "Round [0-9]+" | head -1)
+fi
+
+# Check if commit message already has round reference
+if echo "$COMMIT_MSG" | grep -qE "^\[Round [0-9]+\]"; then
+    echo -e "${GREEN}[Compound Beads]${NC} Commit message includes round reference."
+    exit 0
+fi
+
+# Suggest round reference
+if [ -n "$CURRENT_ROUND" ]; then
+    echo ""
+    echo -e "${YELLOW}[Compound Beads]${NC} Commit message doesn't include round reference."
+    echo -e "Current round: ${BLUE}$CURRENT_ROUND${NC}"
+    echo ""
+    echo -e "Suggested format:"
+    echo -e "  [$CURRENT_ROUND] Your commit message"
+    echo ""
+    echo -e "Your message:"
+    echo -e "  $COMMIT_MSG"
+    echo ""
+    echo -e "Proceeding anyway. Use --no-verify to skip this check."
+fi
+
+# Always allow commit (WARNING level, not blocking)
+exit 0

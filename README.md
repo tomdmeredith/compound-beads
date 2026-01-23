@@ -1,8 +1,17 @@
-# Compound Beads Methodology
+# Compound Beads Methodology v2.0
 
 > **A framework for iterative development with AI agents that compounds knowledge across sessions.**
+>
+> *Evidence-based evolution: Built from 127 rounds of real usage feedback.*
 
-Compound Beads transforms chaotic, context-losing AI sessions into structured, compounding development rounds. Each "bead" is a unit of focused work that builds on everything before it.
+Compound Beads transforms chaotic, context-losing AI sessions into structured, compounding development rounds. Each round is a unit of focused work that builds on everything before it.
+
+**v2.0 Key Changes:**
+- **Round Types**: Feature, Bug Fix, Triage, Polish, Infrastructure
+- **Narrative System**: Arc statements for compiling presentations
+- **Instant Continuity**: New Claude instances pick up immediately via QUICKSTART.md
+- **AI-Initiated Prompts**: No more forgotten slash commands
+- **Expert Panels**: Now optional (5.5% real usage → tool, not requirement)
 
 ## Installation
 
@@ -22,7 +31,7 @@ cp /tmp/cb/templates/CLAUDE.md ./CLAUDE.md
 cp -r /tmp/cb/.claude ./.claude
 ```
 
-This creates `.claude/` in your project with `/ready`, `/plan`, `/work`, `/eval`, `/review`, `/land`, `/panel`.
+This creates `.claude/` in your project with `/plan` and `/panel` commands.
 
 ### Path B: Install as Skill (Recommended)
 
@@ -42,7 +51,7 @@ claude
 > "Set up compound beads for this project"
 ```
 
-Claude creates `.compound-beads/` with project-specific state. Commands: `/compound:start-round`, `/compound:handoff`, `/compound:panel`, `/compound:compound`, `/compound:status`.
+Claude creates `.compound-beads/` with project-specific state. Commands: `/compound:start-round`, `/compound:handoff`, `/compound:compound`, `/compound:research`, `/compound:status`.
 
 **What's different about Path B:**
 - Auto-triggers (context window detection, documentation sync)
@@ -54,53 +63,52 @@ Claude creates `.compound-beads/` with project-specific state. Commands: `/compo
 
 ```
 compound-beads/
-├── skill/                       # Path B: Claude Code Skill
-│   ├── SKILL.md                 # Main skill (auto-triggers, outcomes)
+├── skill/                       # Path B: Claude Code Skill (Recommended)
+│   ├── SKILL.md                 # Main skill v2.0 (AI-initiated prompts)
 │   ├── commands/                # /compound:* commands
-│   │   ├── start-round.md       # Start new round with goal
-│   │   ├── handoff.md           # Context transition
-│   │   ├── expert-panel.md      # Convene expert panel
-│   │   ├── compound.md          # Extract learnings
-│   │   └── status.md            # Show current state
+│   │   ├── start-round.md       # Start round with type and goal
+│   │   ├── handoff.md           # Context transition + close protocol
+│   │   ├── expert-panel.md      # Convene expert panel (optional)
+│   │   ├── compound.md          # Extract learnings + capture Arc
+│   │   ├── status.md            # Show current state
+│   │   ├── compile.md           # Compile Arcs into presentations
+│   │   ├── research.md          # Search learnings for patterns (Step 0)
+│   │   └── close-session.md     # Session close protocol
 │   ├── templates/               # Per-project templates
+│   │   ├── QUICKSTART.md        # Instant continuity (<500 chars)
 │   │   ├── context.md           # Portable memory
-│   │   ├── round.md             # Round documentation
+│   │   ├── round.md             # Round documentation with Arc
 │   │   └── expert-panel.md      # Panel notes
 │   └── agents/
 │       └── expert-panel-facilitator.md
 │
 ├── .claude/                     # Path A: Copy-to-project commands
-│   ├── commands/                # /ready, /plan, /work, etc.
-│   │   ├── ready.md             # Session start
+│   ├── commands/                # Simplified in v2.0
 │   │   ├── plan.md              # Planning workflow
-│   │   ├── work.md              # Execution guidelines
-│   │   ├── eval.md              # Evaluate against criteria
-│   │   ├── review.md            # Quality gates
-│   │   ├── land.md              # Session end
-│   │   └── panel.md             # Expert panel facilitation
+│   │   └── panel.md             # Expert panel (optional)
 │   ├── context/
 │   │   ├── learnings.md         # Accumulated wisdom
 │   │   └── decisions.md         # ADR template
 │   └── plans/
 │
 ├── docs/
-│   ├── METHODOLOGY.md           # Full methodology reference
-│   ├── EVALS_GUIDE.md           # Evals and error analysis (Andrew Ng)
-│   ├── EXPERT_PANEL_GUIDE.md    # The "irrelevant expert" technique
-│   ├── ROUND_MANAGEMENT.md      # Working with rounds
+│   ├── METHODOLOGY.md           # Full v2.0 methodology reference
+│   ├── ROUND_TYPES.md           # Round type guide (NEW)
+│   ├── EVALS_GUIDE.md           # Evals and error analysis
+│   ├── EXPERT_PANEL_GUIDE.md    # Expert panels (now optional)
 │   └── QUICK_REFERENCE.md       # One-page cheat sheet
 │
 ├── templates/
 │   ├── CLAUDE.md                # Agent handoff document template
 │   ├── PLAN_FILE.md             # Plan file template
-│   ├── EVALUATION_RECORD.md     # Detailed eval documentation
-│   ├── EXPERT_PANEL_RECORD.md   # Panel documentation
 │   └── ROUND_ACCOMPLISHMENTS.md
 │
 ├── scripts/
 │   ├── init.sh                  # Initialize in any repo
-│   ├── new-round.sh             # Start new round
-│   └── compress.sh              # Archive old rounds
+│   └── hooks/                   # Git hooks (WARNING level)
+│       ├── pre-commit           # Check files logged in round
+│       ├── commit-msg           # Suggest round ID format
+│       └── install.sh           # Hook installer
 │
 └── examples/
     ├── CLAUDE.md.example        # Real 52-round example
@@ -109,19 +117,34 @@ compound-beads/
 
 ## Core Concepts
 
-### 1. Beads (Rounds)
+### 1. Rounds
 
-Work is organized into numbered rounds: 1, 2, 3... Each round has a clear goal and produces documented outcomes.
+Work is organized into numbered rounds: 1, 2, 3... Each round has a **type**, a clear **goal**, and produces documented outcomes.
+
+**Round Types:**
+| Type | Purpose |
+|------|---------|
+| **Feature** | Ship new functionality |
+| **Bug Fix** | Address issues |
+| **Triage** | Convert feedback to tasks |
+| **Polish** | Refine existing features |
+| **Infrastructure** | DevOps, config, DNS |
 
 ```markdown
 ## Round 5: Implement User Authentication
 
+> **Type**: feature
+> **Goal**: Add secure login for users
+
 - [x] Add login/logout endpoints
 - [x] Create session management
 - [x] Write authentication tests
-```
 
-Sub-rounds (5.1, 5.2) handle iterations within a major round.
+## The Arc
+**We started believing**: JWT tokens are overkill for this app
+**We ended believing**: JWTs simplify mobile support significantly
+**The transformation**: Mobile requirements changed our auth strategy
+```
 
 ### 2. Compound Engineering
 
@@ -132,9 +155,9 @@ Knowledge compounds through:
 - **Round compression** - Recent rounds expand, older rounds summarize
 - **Learnings** - Captured in `/.claude/context/learnings.md`
 
-### 3. Irrelevant Expert Panels
+### 3. Expert Panels (Optional Tool)
 
-The secret weapon. Consult experts from **unrelated fields** who deal with similar patterns:
+Use when genuinely stuck. Consult experts from **unrelated fields** who deal with similar patterns:
 
 | Problem | "Irrelevant" Experts |
 |---------|---------------------|
@@ -145,19 +168,18 @@ The secret weapon. Consult experts from **unrelated fields** who deal with simil
 
 This surfaces insights domain experts miss. See [Expert Panel Guide](./docs/EXPERT_PANEL_GUIDE.md).
 
-## The 5-Phase Pattern
+## The Round Flow
 
-Every round follows this cycle:
+v2.0 uses AI-initiated prompts instead of rigid phases:
 
 ```
-1. EXPERT PANEL     → Fresh perspectives from "irrelevant" fields
-2. ANALYSIS         → Deep dive + define success criteria
-3. IMPLEMENTATION   → Build the solution
-4. EVALUATION       → Measure against criteria, error analysis
-5. DOCUMENTATION    → Capture learnings, update CLAUDE.md
+1. START ROUND      → Declare type and goal
+2. WORK             → Build the solution
+3. COMPOUND         → Capture Arc (story), extract learnings
+4. CLOSE            → Session close protocol (git push, update docs)
 ```
 
-The **Evaluation** phase is based on Andrew Ng's insight that _"the single biggest predictor of how rapidly a team makes progress building an AI agent lay in their ability to drive a disciplined process for evals and error analysis."_ See [EVALS_GUIDE.md](./docs/EVALS_GUIDE.md).
+**Expert panels** are optional—use when genuinely stuck. **Evaluation** is still important—see [EVALS_GUIDE.md](./docs/EVALS_GUIDE.md).
 
 ## CLAUDE.md Structure
 
@@ -175,17 +197,28 @@ The heart of compound engineering. Required sections:
 
 See [templates/CLAUDE.md](./templates/CLAUDE.md) for the full template.
 
-## Slash Commands
+## Commands
+
+**Path A (Starter Kit):**
 
 | Command | Purpose |
 |---------|---------|
-| `/ready` | Start a session - reads CLAUDE.md, shows context |
 | `/plan` | Enter planning mode for complex work |
-| `/work` | Execution guidelines and checkpoints |
-| `/eval` | Evaluate against success criteria, error analysis |
-| `/review` | Quality gates before finishing |
-| `/land` | End session - compress rounds, update docs |
-| `/panel` | Facilitate an irrelevant expert panel |
+| `/panel` | Facilitate an expert panel (optional, use when stuck) |
+
+**Path B (Skill):**
+
+| Command | Purpose |
+|---------|---------|
+| `/compound:start-round` | Start new round with type and goal |
+| `/compound:handoff` | Context transition + session close protocol |
+| `/compound:status` | Show current state and tasks |
+| `/compound:compound` | Extract learnings and capture Arc |
+| `/compound:compile` | Compile Arc statements into presentations |
+| `/compound:research` | Search learnings for relevant patterns (Step 0) |
+| `/compound:panel` | Facilitate expert panel (optional) |
+
+**Note:** Most documentation happens automatically via AI-initiated prompts. Commands are conveniences, not requirements.
 
 ## Why It Works
 

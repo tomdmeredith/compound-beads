@@ -1,105 +1,208 @@
 # /compound:handoff
 
-Prepare for context transition (session end, context window filling, or explicit request).
+Prepare for context transition with full session close protocol.
+
+**This is the comprehensive version of session close - use for major transitions.**
 
 ## Trigger
 
 - User invokes `/compound:handoff`
 - Context window > 80% full (auto-trigger)
-- Session ending
+- Major session ending
+- Before starting a significantly different task
 
 ## Process
 
-### 1. Read Current State
-Use `read-state` primitive to get:
-- Current round and goal
-- Modified files this round
-- Ready/blocked task status
-- Any partial completion state
+### Step 1: Run Session Close Protocol
 
-### 2. Sync Documentation
-Use `sync-docs` primitive to update CLAUDE.md:
+Execute all steps from `/compound:close-session`:
+1. git status
+2. git add [files]
+3. git commit -m "[Round N] ..."
+4. Update rounds.jsonl
+5. Update context.md
+6. Regenerate QUICKSTART.md
+7. git push
+
+### Step 2: Sync CLAUDE.md
+
+Update CLAUDE.md with current round status:
 
 ```markdown
 ## Current Work (Round 53)
 
-**Goal:** [Goal from context.md]
+> **Type:** feature
+> **Goal:** Implement user authentication
 
-### Round 53 Accomplishments
+### Accomplishments
 - [x] Completed item 1
 - [x] Completed item 2
 - [ ] Pending item (in progress)
 
+### The Arc
+**We started believing:** [...]
+**We ended believing:** [...]
+**The transformation:** [...]
+
 ### Modified Files
-- `/src/lib/auth.ts` - Added authentication logic
-- `/src/components/login.tsx` - Login UI component
+| File | Change |
+|------|--------|
+| `/src/lib/auth.ts` | Added authentication logic |
+| `/src/components/login.tsx` | Login UI component |
 ```
 
-### 3. Check Memory Decay
-If context.md > 5000 characters:
-- Use `archive-round` primitive to move old rounds to archive/
-- Keep last 3 rounds in detail
-- Compress older rounds to single-line summaries
+### Step 3: Compress Previous Rounds
 
-### 4. Record Partial Completion
-If round is incomplete, update context.md with:
+If CLAUDE.md is getting long (>400 lines):
+- Move current "Previous Round" to "Earlier Rounds" table
+- Keep only essential details
+- Archive full round documentation to `.compound-beads/archive/`
+
+**Before:**
+```markdown
+## Previous Round (Round 52)
+
+> **Type:** bug_fix
+> **Goal:** Fix payment processing timeout
+
+- [x] Identified race condition in payment webhook
+- [x] Added retry logic with exponential backoff
+- [x] Updated monitoring alerts
+...
+```
+
+**After:**
+```markdown
+## Earlier Rounds
+
+| Round | Type | Goal | Key Arc |
+|-------|------|------|---------|
+| 52 | bug_fix | Payment timeout | Race condition → retry logic |
+| 51 | feature | Notification system | Push → email fallback |
+| 50 | polish | Onboarding flow | 12 steps → 5 steps |
+```
+
+### Step 4: Check Memory Decay
+
+If context.md > 5000 characters:
+- Archive rounds older than last 3
+- Compress to single-line summaries in archive/
+- Update "Recent Activity" table
+
+### Step 5: Record Partial Completion
+
+If round is incomplete, update context.md:
 ```markdown
 ## Partial Completion Tracking
-Status: 3/5 complete (60%)
+
+**Status:** 3/5 complete (60%)
+
 - [x] Task 1
 - [x] Task 2
 - [ ] Task 3 (IN PROGRESS - stopped at: validation logic)
 - [ ] Task 4
 - [ ] Task 5
+
+**Last stopped at:** Implementing email validation in `/src/lib/auth.ts:45`
 ```
 
-### 5. Update Ready Status
-Use `mark-ready` or `mark-blocked` primitives:
+### Step 6: Update Ready/Blocked Status
+
 ```markdown
-## Ready to Resume
+## Ready Tasks
 - [READY] Continue validation logic implementation
-- [BLOCKED] Deploy to production (needs: security review)
+- [READY] Write tests for social login
+
+## Blocked Tasks
+- [BLOCKED] Deploy to production
+  └─ Needs: security review from team lead
 ```
 
-### 6. Generate Handoff Summary
-Create brief summary for next session:
+### Step 7: Generate Handoff Summary
+
+Add to context.md:
+```markdown
+## Handoff Summary
+
+**Round:** 53 (cb-f3a8)
+**Goal:** Implement user authentication
+**Progress:** 60% (3/5 tasks)
+**Status:** in_progress
+
+**For Next Session:**
+1. Continue validation logic in `/src/lib/auth.ts`
+2. Run existing tests to verify no regressions
+3. Consider edge case: expired social tokens
+
+**Blockers:**
+- Deployment blocked on security review
+
+**Context:**
+- Using Supabase Auth (decision made in Round 51)
+- Social login working (Google, GitHub)
+- Email/password fallback in progress
 ```
----
-Handoff Summary (cb-f3a8, Round 53)
-Goal: Implement user authentication
-Progress: 60% (3/5 tasks)
-Next: Continue validation logic in /src/lib/auth.ts
-Blocked: Deployment (needs security review)
----
+
+## Verification Checklist
+
+Before declaring handoff complete:
+
+```
+[x] Session close protocol completed (git pushed)
+[x] CLAUDE.md reflects current state
+[x] Previous rounds compressed if needed
+[x] context.md under 5000 chars
+[x] QUICKSTART.md regenerated
+[x] Ready/blocked tasks clearly marked
+[x] Handoff summary written
 ```
 
 ## Example Output
 
 ```
-Handoff prepared for Round 53 (cb-f3a8)
+Running handoff protocol for Round 53 (cb-f3a8)...
 
-Synced to CLAUDE.md:
-- 3 accomplishments logged
-- 4 modified files documented
+[Session Close Protocol]
+  ✓ Committed: [Round 53] Add social login authentication
+  ✓ Pushed to origin/main
+  ✓ rounds.jsonl updated
+  ✓ context.md updated
+  ✓ QUICKSTART.md regenerated
 
-Memory status: context.md at 3,200 chars (OK)
+[CLAUDE.md Sync]
+  ✓ Current Work section updated
+  ✓ 4 accomplishments logged
+  ✓ 5 modified files documented
 
-Ready tasks:
-- Continue validation logic
+[Memory Management]
+  ✓ context.md at 3,200 chars (OK)
+  ✓ CLAUDE.md at 320 lines (OK)
+  ✓ Round 50 archived
 
-Blocked tasks:
-- Deploy to production (needs: security review)
+[Handoff Summary]
+  Goal: Implement user authentication
+  Progress: 60% (3/5 tasks)
+  Ready: Continue validation logic
+  Blocked: Deployment (needs security review)
 
-Next session can resume from .compound-beads/context.md
+Handoff complete. Next Claude instance can resume from:
+  - .compound-beads/QUICKSTART.md (quick context)
+  - .compound-beads/context.md (full state)
+  - CLAUDE.md (human-readable)
 ```
 
-## Primitives Composed
+## When to Use Handoff vs Close-Session
 
-| Primitive | Usage |
-|-----------|-------|
-| `read-state` | Get current round state |
-| `sync-docs` | Update CLAUDE.md with accomplishments |
-| `archive-round` | Compress old rounds if needed |
-| `mark-ready` | Track resumable tasks |
-| `mark-blocked` | Track blocked tasks with reasons |
-| `log-file` | Record all modified files |
+| Situation | Use |
+|-----------|-----|
+| Quick session end | `/compound:close-session` |
+| Context window full | `/compound:handoff` |
+| Major transition | `/compound:handoff` |
+| End of day | `/compound:handoff` |
+| Switching to different work | `/compound:handoff` |
+
+**Difference:** Handoff does everything close-session does, PLUS:
+- Full CLAUDE.md sync
+- Round compression
+- Memory decay management
+- Detailed handoff summary

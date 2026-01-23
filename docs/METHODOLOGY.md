@@ -1,8 +1,7 @@
-# Compound Beads Methodology
+# Compound Beads Methodology v2.0
 
-> **Complete Reference Guide**
-
-This document describes the Compound Beads methodology for iterative development with AI agents.
+> **Evidence-Based Evolution**
+> Built from 127 rounds of real usage feedback.
 
 ---
 
@@ -20,33 +19,73 @@ AI agent sessions suffer from **context amnesia**:
 
 Compound Beads structures work into **numbered rounds** that:
 - Document progress in a living handoff file (CLAUDE.md)
-- Compress older rounds to preserve context
-- Use persistent plan files for complex work
-- Consult "irrelevant experts" for fresh perspectives
+- Auto-compress older rounds to preserve context
+- Use AI-initiated prompts instead of ceremony
+- Capture narrative for compilation into presentations
 
-Like beads on a string, each round is distinct but connected to all that came before.
+**Key Insight from real usage:** *"Compound Beads works well as a documentation/handoff system. Compound Beads works poorly as a workflow enforcement system."*
+
+We lean into documentation. We automate enforcement.
+
+---
+
+## What Changed in v2.0
+
+| Removed | Reason |
+|---------|--------|
+| `/ready`, `/land`, `/work`, `/eval`, `/review` | Never remembered. Replaced by auto-triggers. |
+| Decimal sub-rounds (24.1) | Not used since Round 49. Just use next integer. |
+| Session-based model | Work is continuous. Remove artificial boundaries. |
+| Expert panels as requirement | Only 5.5% usage. Now optional tool. |
+
+| Added | Reason |
+|-------|--------|
+| **Round Types** | Feature, Bug Fix, Triage, Polish, Infrastructure |
+| **Bead Sizing** | 30 min minimum, 4 hours maximum |
+| **Narrative System** | Arc statements for presentations |
+| **Session Close Protocol** | Automatic enforcement at conversation end |
+| **QUICKSTART.md** | Instant continuity for new Claude instances |
+| **AI-Initiated Prompts** | Claude prompts, not user remembers |
 
 ---
 
 ## Core Components
 
-### 1. Beads (Rounds)
+### 1. Rounds (Beads)
 
 A **round** is a focused unit of work with:
 - A clear goal
+- A declared type
 - Documented accomplishments (checkboxes)
 - A round number
 
-**Naming Convention:**
-- Major rounds: 1, 2, 3, 4...
-- Sub-rounds: 4.1, 4.2, 4.3... (iterations on a major round)
-- Hot-fix rounds: 4.1.1 (rare, for urgent fixes)
+**Round Types:**
+
+| Type | Purpose | Typical Tasks | Example |
+|------|---------|---------------|---------|
+| **Feature** | Ship new functionality | 3-7 | Add user authentication |
+| **Bug Fix** | Address issues | 2-5 | Fix payment processing |
+| **Triage** | Convert feedback to tasks | Creates many, closes few | Process user feedback |
+| **Polish** | Refine existing features | 5-10 small | Improve onboarding UX |
+| **Infrastructure** | DevOps, config, DNS | 1-3 | Set up email service |
+
+Declare round type at start. Helps scope expectations.
+
+**Bead Sizing:**
+
+| Duration | Action |
+|----------|--------|
+| <30 min | Bundle into parent round as sub-task |
+| 30 min - 4 hours | Individual bead |
+| >4 hours | Break into multiple beads |
+
+**Exception:** P0 bugs ALWAYS get their own bead (visibility > efficiency)
 
 **Round Header Template:**
 ```markdown
 ## Round N: [One-Line Goal]
 
-> **Methodology**: [Approach/technique used]
+> **Type**: [feature | bug_fix | triage | polish | infrastructure]
 > **Goal**: [Desired outcome]
 
 - [x] Completed task
@@ -77,168 +116,152 @@ The living heart of compound engineering. Updated every round.
 - Previous round: Condensed, key accomplishments
 - Earlier rounds: One-line table entries
 
-### 3. Plan Files
+### 3. QUICKSTART.md (Instant Continuity)
+
+A tiny (<500 chars) file that ensures any new Claude instance picks up immediately.
+
+Located at: `.compound-beads/QUICKSTART.md`
+
+**Auto-updated at session close.** Contains:
+- Current round number and goal
+- Round type and status
+- What to do next
+- Recent history (last 3 rounds)
+
+**Why it works:**
+- Fits in any context window
+- Always current (auto-updated)
+- Points to full context in CLAUDE.md
+- No ceremony required
+
+### 4. Plan Files (When Helpful)
 
 Persistent planning documents in `/.claude/plans/`.
 
 **When to Use:**
-- Complex multi-step work
-- Major features or refactors
+- Complex multi-step work where you need to think through approach
 - Work spanning multiple sessions
 - Decisions requiring research
 
-**Naming Convention:**
-`[adjective]-[verb]-[noun].md`
+**When to Skip:**
+- Simple feature work
+- Bug fixes
+- Single-session tasks
 
-Examples:
-- `dynamic-seeking-backus.md`
-- `curious-dancing-hopper.md`
-- `swift-building-lovelace.md`
+Plan files are a tool, not a requirement.
 
-**Structure:**
+### 5. Expert Panels (Optional Tool)
+
+**Downgraded from "signature feature" to "optional tool" based on real usage (5.5% of rounds).**
+
+Use when:
+- Genuinely stuck with no clear path forward
+- Facing a novel problem domain with no prior art
+- Want fresh perspective on a difficult decision
+
+Skip when:
+- Regular feature/bug work
+- Path is clear
+- Domain is familiar
+
+See [EXPERT_PANEL_GUIDE.md](./EXPERT_PANEL_GUIDE.md) for how to run a panel when needed.
+
+---
+
+## The Narrative System
+
+### Why Capture Narrative
+
+Each round has a story. Capturing it enables:
+- Compiling presentations about the build
+- Creating case studies
+- Sharing learnings with teams
+- Remembering why decisions were made
+
+### The Arc (Required for All Rounds)
+
+Every round captures a 3-sentence transformation:
+
 ```markdown
-# [Feature/Task Name] - Plan
-
-> **Status:** Planning | In Progress | Complete
-> **Created:** [Date]
-> **Last Updated:** [Date]
-
-## Goal
-[Clear, measurable goal]
-
-## Approach
-[How we'll achieve the goal]
-
-## Phases
-1. [Phase 1]
-2. [Phase 2]
-...
-
-## Decisions
-[Key decisions and rationale]
-
-## Open Questions
-- [ ] [Question 1]
-- [ ] [Question 2]
+## The Arc
+**We started believing**: [Initial hypothesis]
+**We ended believing**: [Final understanding]
+**The transformation**: [One sentence describing the shift]
 ```
 
-### 4. Irrelevant Expert Panels
+### Additional Narrative Sections (Major Rounds)
 
-The secret weapon. See [EXPERT_PANEL_GUIDE.md](./EXPERT_PANEL_GUIDE.md) for full details.
+| Section | Purpose |
+|---------|---------|
+| **The Hypothesis** | What we believed going in |
+| **The Pivot Point** | Single most important turning moment |
+| **Stakes** | Why this mattered, what was at risk |
+| **Paths Not Taken** | Options considered but rejected |
 
-**Core Idea:** Domain experts have domain blindness. Experts from **unrelated fields** who deal with similar patterns surface insights you'd never find otherwise.
+### Quick Capture During Work
 
-**Example:**
-Building a monitoring dashboard? Ask:
-- Air Traffic Controller (monitors many moving objects)
-- ER Nurse (triages severity-based queues)
-- Security Guard (pattern recognition in normal activity)
+At natural breaks, note:
+- Just tried: [approach]
+- Result: [worked/didn't work]
+- Surprise level: [expected/unexpected]
+- Next: [what this makes us want to try]
 
----
+### Compilation
 
-## The 5-Phase Cycle
-
-Every round follows this pattern:
-
-### Phase 1: Expert Panel (Optional)
-
-When facing a new problem domain, convene an "irrelevant" expert panel:
-
-1. Identify the **pattern** you're dealing with (monitoring, prioritization, trust-building, etc.)
-2. Find **3-5 experts** from unrelated fields who handle that pattern
-3. Ask each: "How do you handle [pattern] in your work?"
-4. Document insights in a table
-
-### Phase 2: Analysis
-
-Deep dive into the problem:
-
-- Read existing code/documentation
-- Identify constraints and requirements
-- List edge cases
-- **Define success criteria** (what does "done" look like?)
-
-### Phase 3: Implementation
-
-Build the solution:
-
-- Create/modify files
-- Write tests
-- Handle edge cases
-- Integrate with existing code
-
-### Phase 4: Evaluation
-
-Measure against success criteria:
-
-- Compare actual outcomes to targets
-- Document what worked and what didn't
-- Perform error analysis on failures
-- Identify root causes, not just symptoms
-- Prioritize next improvements based on data
-
-See [EVALS_GUIDE.md](./EVALS_GUIDE.md) for detailed evaluation techniques.
-
-### Phase 5: Documentation
-
-Capture the work:
-
-- Update CLAUDE.md with round accomplishments
-- Add inline code comments for round-specific changes
-- Update relevant docs
-- Compress previous round if needed
-- Include error analysis findings
+Use `/compound:compile` to extract Arc statements from multiple rounds into:
+- Presentation outline
+- Script draft
+- Case study format
 
 ---
 
-## Round Management
+## AI-Initiated Prompts
 
-### Starting a Round
+Instead of slash commands you forget to run, Claude prompts when contextually relevant.
 
-1. **Read CLAUDE.md** - Understand current state
-2. **Define the goal** - One clear objective
-3. **Create checkboxes** - Break work into tasks
-4. **Consider expert panel** - New problem domain?
-
-### During a Round
-
-- Check off tasks as completed
-- Add sub-tasks as discovered
-- Note key decisions inline
-- Use plan files for complex detours
-
-### Ending a Round
-
-1. Mark all tasks complete or explicitly defer
-2. Write round summary with key accomplishments
-3. Update "Key Insight" if there's a major learning
-4. Compress to Previous Round section
-5. Update Earlier Rounds table
-
-### When to Start a New Round
-
-- Goal achieved
-- Major pivot in direction
-- Session ending (natural breakpoint)
-- Context getting too long (compress and continue)
+| Trigger | AI Prompt |
+|---------|-----------|
+| Significant work completed | "Should I update CLAUDE.md with this round's progress?" |
+| Complex multi-step work detected | "This looks complex - want me to create a plan file?" |
+| End of conversation detected | "Before we wrap, let me run the session close protocol..." |
+| Pattern discovered | "I noticed a useful pattern - add to learnings.md?" |
+| Blocked for >7 days | "This bead has been open 7+ days - close, defer, or update?" |
 
 ---
 
-## Code Comments
+## Session Close Protocol
 
-Mark round-specific changes in code:
+**Replaces `/land`.** Runs automatically when session ends.
 
-```typescript
-// Round 5: Added retry logic for network failures
-async function fetchWithRetry() {
-  // ...
-}
+Before saying "done" or "complete":
 
-// Round 7: Fixed edge case where null user caused crash
-if (!user) return defaultValue;
+```
+[ ] 1. git status              (check what changed)
+[ ] 2. git add <files>         (stage code changes)
+[ ] 3. git commit -m "..."     (commit code)
+[ ] 4. Update rounds.jsonl     (add round entry if closing)
+[ ] 5. Update context.md       (current state)
+[ ] 6. Update QUICKSTART.md    (regenerate for next session)
+[ ] 7. git push                (push to remote)
 ```
 
-This creates an archaeology of changes.
+**Critical Rule:** *"Work is not done until pushed AND tracking files updated."*
+
+---
+
+## Git Hooks (WARNING Level)
+
+Optional hooks that remind without blocking.
+
+**Pre-Commit Hook:**
+- Checks staged files are logged in round
+- Warns if CLAUDE.md not updated
+- Suggests round ID for commit message
+
+**Commit Message Hook:**
+- Recommends format: `[Round N] description`
+- Auto-suggests current round ID
+- Bypass with `--no-verify`
 
 ---
 
@@ -260,7 +283,7 @@ As rounds accumulate, compress older ones:
 
 **After Compression:**
 ```markdown
-| 5 | Authentication | OAuth flow, session management |
+| 5 | Feature | Authentication | OAuth flow, session management |
 ```
 
 ### Recommended Structure
@@ -271,28 +294,35 @@ Previous Round (Round N-1) → Condensed (20-30 lines)
 Earlier Rounds             → Table summary (1 line per round)
 ```
 
-### When Context Gets Long
+### Memory Management
 
-If CLAUDE.md exceeds 500 lines:
-1. Move detailed docs to separate files
-2. Link from Documentation section
-3. Keep CLAUDE.md as index + current work
+- If context.md > 5000 chars → Archive old rounds
+- Keep last 3 rounds in detail
+- Compress older rounds to single-line summaries in archive/
 
 ---
 
-## Slash Commands
+## File Structure
 
-Standardized workflow commands in `.claude/commands/`:
+```
+project/
+├── CLAUDE.md                    # Human-readable handoff document
+└── .compound-beads/
+    ├── QUICKSTART.md            # Instant continuity (<500 chars)
+    ├── context.md               # Portable memory for Claude
+    ├── rounds.jsonl             # Machine-readable round history
+    ├── learnings.md             # Compounded insights
+    └── archive/                 # Compressed old rounds
+```
 
-| Command | When | Purpose |
-|---------|------|---------|
-| `/ready` | Session start | Load context, orient |
-| `/plan` | Before complex work | Enter planning mode |
-| `/work` | During implementation | Execution checkpoints |
-| `/eval` | After implementation | Evaluate against success criteria |
-| `/review` | Before finishing | Quality gates |
-| `/land` | Session end | Compress, document, handoff |
-| `/panel` | New problem domain | Facilitate expert panel |
+### rounds.jsonl Format (Event-Based)
+
+```jsonl
+{"event":"round_started","machineId":"cb-f3a8","displayId":"53","type":"feature","goal":"...","started":"...","actor":"claude"}
+{"event":"task_added","machineId":"cb-f3a8","taskId":"t1","description":"..."}
+{"event":"arc_captured","machineId":"cb-f3a8","startedBelieving":"...","endedBelieving":"...","transformation":"..."}
+{"event":"round_completed","machineId":"cb-f3a8","completed":"...","closedBySession":"session-xyz","keyInsight":"..."}
+```
 
 ---
 
@@ -301,19 +331,18 @@ Standardized workflow commands in `.claude/commands/`:
 ### Do
 
 - Update CLAUDE.md after every round
-- Use clear, numbered round headers
-- Document key insights and learnings
-- Compress older rounds regularly
-- Use expert panels for new domains
-- Keep plan files for complex work
+- Declare round type at start
+- Capture Arc statement at round end
+- Let AI-initiated prompts guide documentation
+- Run session close protocol before ending
 
 ### Don't
 
 - Let CLAUDE.md grow unbounded
 - Skip documentation "to save time"
 - Use vague round goals
-- Ignore domain experts just because they're "irrelevant"
-- Start new rounds without reading previous context
+- Create ceremony for its own sake
+- Forget to push
 
 ---
 
@@ -322,144 +351,38 @@ Standardized workflow commands in `.claude/commands/`:
 ### "Just One More Thing" Round
 
 Starting rounds without clear goals leads to scope creep.
-Fix: Define goal in round header before starting.
+**Fix:** Declare goal and type in round header before starting.
 
 ### "Empty Compression"
 
 Compressing rounds without capturing key learnings.
-Fix: Always include 1-2 sentence "Key Insight" for major rounds.
+**Fix:** Always include Arc statement for all rounds.
 
 ### "Documentation Debt"
 
 Postponing CLAUDE.md updates until later.
-Fix: Update immediately after completing tasks.
+**Fix:** Let AI-initiated prompts remind you.
 
-### "Expert Tunnel Vision"
+### "Ceremony Theater"
 
-Only consulting domain experts, missing patterns.
-Fix: Always include 2-3 "irrelevant" experts in panels.
-
----
-
-## Evals-Driven Development
-
-> **"The single biggest predictor of how rapidly a team makes progress building an AI agent lay in their ability to drive a disciplined process for evals (measuring the system's performance) and error analysis (identifying the causes of errors)."**
-> — Andrew Ng, DeepLearning.AI
-
-### Why Evals Matter
-
-Teams that DON'T do this:
-- Spend months tweaking with little progress
-- Hit performance ceilings they can't break through
-- Guess what to work on instead of letting data guide them
-
-Teams that DO this:
-- Efficiently home in on which components to improve
-- Make faster progress with less wasted effort
-- Compound improvements over time
-
-### The Musicians vs. Fumblers Analogy
-
-| Domain | What Winners Do | What Losers Do |
-|--------|-----------------|----------------|
-| **Music** | Identify stumbling points, practice those | Play start-to-end repeatedly |
-| **Health** | Get bloodwork, see what's amiss | Chase nutrition fads |
-| **Sports** | Review game films, spot gaps | Practice trick shots |
-| **AI/Software** | Use error analysis to find gaps | Stack buzzy techniques from social media |
-
-### Defining Success Criteria
-
-Before starting implementation, define measurable outcomes:
-
-```markdown
-### Success Criteria
-
-| Criterion | Metric | Target |
-|-----------|--------|--------|
-| Speed | Response time | <500ms |
-| Accuracy | Match quality | >85% |
-| Coverage | Results found | 50+ |
-```
-
-### Error Analysis Process
-
-When something fails or underperforms:
-
-1. **Observe** - What actually happened vs. expected?
-2. **Categorize** - What type of failure is this?
-3. **Root Cause** - Why did this happen? (5 Whys technique)
-4. **Action** - What change will fix the root cause?
-5. **Verify** - Did the fix work?
-
-```markdown
-### Error Analysis
-
-| Error | Root Cause | Action | Result |
-|-------|------------|--------|--------|
-| Low accuracy | FAANG bias in ICP | Removed, added Company DNA | ✅ +23% |
-| Missing results | Single-hop search | Added multi-hop expansion | ✅ +15 results |
-```
-
-### Key Principle
-
-> "To improve your agentic AI system, don't just stack up the latest buzzy techniques that just went viral on social media. Instead, use error analysis to figure out where it's falling short, and focus on that."
-
-See [EVALS_GUIDE.md](./EVALS_GUIDE.md) for comprehensive evaluation techniques.
+Running slash commands without understanding why.
+**Fix:** Removed. AI prompts when contextually relevant.
 
 ---
 
-## Integration with Tools
+## Step 0: Load Context
 
-### Claude Code
+Before starting any work, Claude auto-loads:
+1. `QUICKSTART.md` - Immediate context
+2. `context.md` - Current state and tasks
+3. Recent learnings - Relevant patterns from past rounds
 
-Compound Beads was designed for Claude Code:
-- Slash commands live in `.claude/commands/`
-- Plan files in `.claude/plans/`
-- Context files in `.claude/context/`
-
-### Other AI Agents
-
-The methodology works with any AI tool that:
-- Can read markdown files
-- Has session continuity (or uses CLAUDE.md for handoff)
-- Supports iterative conversation
-
----
-
-## Example Round
-
-```markdown
-## Round 12: Add Rate Limiting
-
-> **Methodology**: Compound Beads - Security enhancement
-> **Goal**: Prevent API abuse with IP-based rate limiting
-
-**Expert Panel Insights:**
-| Expert | Field | Insight |
-|--------|-------|---------|
-| Bouncer | Nightclub | VIP vs general admission queues |
-| Casino Pit Boss | Gaming | Pattern-based detection over hard limits |
-
-- [x] Created rate limiter middleware
-- [x] Added per-IP tracking with 15-minute window
-- [x] Implemented graceful degradation (429 response)
-- [x] Added VIP bypass for authenticated users
-- [x] Unit tests for edge cases
-
-**Key Insight:** The casino pit boss approach (pattern detection)
-is better than hard limits. Legitimate users burst; abusers sustain.
-
-**Files Changed:**
-- `/src/middleware/rate-limiter.ts` (new)
-- `/src/routes/api.ts` (added middleware)
-- `/src/lib/redis.ts` (added rate limit store)
-```
+This happens automatically. No ceremony required.
 
 ---
 
 ## See Also
 
-- [EVALS_GUIDE.md](./EVALS_GUIDE.md) - Comprehensive evals and error analysis guide
-- [EXPERT_PANEL_GUIDE.md](./EXPERT_PANEL_GUIDE.md) - Deep dive on expert panels
-- [ROUND_MANAGEMENT.md](./ROUND_MANAGEMENT.md) - Round lifecycle details
+- [ROUND_TYPES.md](./ROUND_TYPES.md) - Guide to round types
+- [EXPERT_PANEL_GUIDE.md](./EXPERT_PANEL_GUIDE.md) - Optional expert panel process
 - [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) - One-page cheat sheet

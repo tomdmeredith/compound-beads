@@ -1,8 +1,24 @@
-# Irrelevant Expert Panel Guide
+# Expert Panel Guide
 
-> **The Secret Weapon of Compound Beads**
+> **An Optional Tool for When You're Genuinely Stuck**
 
-The most powerful technique in this methodology is consulting "irrelevant" experts - professionals from unrelated fields who deal with similar patterns.
+Expert panels consult professionals from unrelated fields who deal with similar patterns. This can provide breakthrough insights when you're stuck.
+
+## When to Use Expert Panels
+
+**Use when:**
+- You're genuinely stuck with no clear path forward
+- Facing a novel problem domain with no prior art
+- Want fresh perspective on a difficult decision
+- Standard approaches aren't working
+
+**Skip when:**
+- Regular feature/bug work
+- Path is clear
+- Domain is familiar
+- Time is critical (panels add overhead)
+
+*Based on real usage: Expert panels were used in only 5.5% of rounds, despite many rounds technically "qualifying." Most work doesn't need them.*
 
 ---
 

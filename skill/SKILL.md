@@ -1,8 +1,10 @@
-# Compound Beads Skill
+# Compound Beads Skill v2.0
 
 A methodology for iterative development that compounds knowledge across sessions.
 
-**Signature feature: Expert Panels from unrelated domains.**
+**Key features: Round types, narrative capture, instant continuity, AI-initiated prompts.**
+
+> Built from 127 rounds of real usage feedback. Evidence-based evolution.
 
 ## My Role
 
@@ -10,17 +12,33 @@ I am Claude, assisting with iterative development using Compound Beads methodolo
 
 ---
 
-## Auto-Triggers (Condition-Based Enforcement)
+## Step 0: Load Context (MANDATORY)
 
-I proactively take action based on measurable conditions, not relying on user memory:
+Before starting any work on a project with `.compound-beads/`:
+1. Auto-read `QUICKSTART.md` - Immediate context (<500 chars)
+2. Auto-read `context.md` - Current state and tasks
+3. Scan recent learnings - Relevant patterns from past rounds
 
-| Condition | Action |
-|-----------|--------|
-| Context window > 80% full | Proactively run handoff protocol |
-| Round has >5 file modifications | Update context.md with file list |
-| CLAUDE.md "Current Round" differs from context.md | Offer to sync |
-| Round marked complete | Prompt for Compound phase (learnings extraction) |
-| context.md stale (>24h since update) | Prompt about round status |
+**If QUICKSTART.md is stale (>24h):** Prompt "Context may be stale. Should I check round status?"
+
+---
+
+## Auto-Triggers (AI-Initiated Prompts)
+
+I proactively prompt based on conditions, not relying on user memory:
+
+| Condition | AI Prompt |
+|-----------|-----------|
+| Context window > 80% full | "Context is getting full. Let me run the handoff protocol..." |
+| Round has >5 file modifications | "Should I update context.md with the modified files?" |
+| CLAUDE.md "Current Round" differs from context.md | "CLAUDE.md and context.md are out of sync. Should I fix?" |
+| Round marked complete | "Round complete. Let me capture the Arc and update docs..." |
+| Session ending detected | "Before we wrap, let me run the session close protocol..." |
+| Significant work completed | "Should I update CLAUDE.md with this progress?" |
+| Complex multi-step work detected | "This looks complex - want me to create a plan file?" |
+| Pattern discovered | "I noticed a useful pattern - add to learnings.md?" |
+| Bead open > 7 days | "This bead has been open 7+ days - close, defer, or update?" |
+| Completion signals detected ("that worked", "it's fixed") | "Great! Let me capture what we learned..." |
 
 ---
 
@@ -44,17 +62,20 @@ The skill builds on Claude's existing primitives (Read, Write, Edit). These doma
 
 ---
 
-## Composed Commands (Convenience, Not Required)
+## Composed Commands
 
-These commands compose primitives for common workflows. Users can invoke them OR achieve the same outcomes using raw primitives.
+| Command | Description |
+|---------|-------------|
+| `/compound:start-round` | Start new round with type and goal |
+| `/compound:handoff` | Prepare for context transition (includes session close) |
+| `/compound:panel` | Convene expert panel (optional, use when stuck) |
+| `/compound:compound` | Extract learnings and capture Arc |
+| `/compound:status` | Show current round state and tasks |
+| `/compound:compile` | Compile Arc statements into presentations |
+| `/compound:research` | Search learnings for relevant patterns |
+| `/compound:close-session` | Run session close protocol |
 
-| Command | Description | Composes |
-|---------|-------------|----------|
-| `/compound:start-round` | Start new round with goal | set-goal + read-state + log initial context |
-| `/compound:handoff` | Prepare for context transition | sync-docs + archive if needed + summarize |
-| `/compound:panel` | Convene expert panel | add-expert × N + synthesize insights |
-| `/compound:compound` | Extract learnings from round | add-learning × N + update learnings.md |
-| `/compound:status` | Show current state | read-state + format ready/blocked tasks |
+**Note:** Many of these run automatically via AI-initiated prompts. Manual invocation optional.
 
 ---
 
@@ -70,22 +91,38 @@ When starting work on a project with `.compound-beads/` directory:
 ### Outcome 2: Round Tracking
 
 Significant work should be tracked within a named round:
-- **Display ID**: Sequential (Round 53, 53.1) for human readability
+- **Display ID**: Sequential integers (Round 53, 54, 55) - no decimals
 - **Machine ID**: Hash (cb-xxxx) for conflict-free correlation
+- **Type**: feature | bug_fix | triage | polish | infrastructure
 - Every round has a stated goal
 - Modified files are logged
 
-### Outcome 3: Expert Panel Consideration (SIGNATURE FEATURE)
+**Round Types:**
+| Type | Purpose |
+|------|---------|
+| feature | Ship new functionality (3-7 tasks typical) |
+| bug_fix | Address issues (2-5 tasks typical) |
+| triage | Convert feedback to tasks (creates many, closes few) |
+| polish | Refine existing features (5-10 small tasks typical) |
+| infrastructure | DevOps, config, DNS (1-3 tasks typical) |
 
-**This is what makes Compound Beads unique.**
+**Sizing:** 30 min minimum, 4 hours maximum. Break larger work into multiple rounds.
 
-Complex decisions benefit from diverse perspectives FROM UNRELATED DOMAINS. When facing:
-- New user-facing features
-- Pricing/business model changes
-- Security-related changes
-- Architectural refactoring
+### Outcome 3: Expert Panel (OPTIONAL TOOL)
 
-I consult 3-5 experts from seemingly irrelevant fields. Their fresh perspectives break groupthink.
+**Downgraded from "signature feature" to "optional tool" based on real usage (5.5% of rounds).**
+
+Use expert panels when:
+- Genuinely stuck with no clear path forward
+- Facing a novel problem domain with no prior art
+- Want fresh perspective on a difficult decision
+
+Skip expert panels when:
+- Regular feature/bug work
+- Path is clear
+- Domain is familiar
+
+When used, consult 3-5 experts from seemingly irrelevant fields for fresh perspectives.
 
 ### Outcome 4: Documentation Sync
 
@@ -94,7 +131,21 @@ CLAUDE.md should reflect the current state:
 - Recent accomplishments
 - Key files modified
 
-### Outcome 5: Compound Phase
+### Outcome 5: Narrative Capture
+
+Every round captures The Arc (3-sentence transformation):
+```markdown
+## The Arc
+**We started believing**: [Initial hypothesis]
+**We ended believing**: [Final understanding]
+**The transformation**: [One sentence describing the shift]
+```
+
+For major rounds, also capture:
+- **The Pivot Point**: Single most important turning moment
+- **Stakes**: Why this mattered, what was at risk
+
+### Outcome 6: Compound Phase
 
 Before marking a round complete, extract learnings:
 - What applies beyond this specific round?
@@ -116,22 +167,48 @@ Track what can be immediately resumed:
 - [BLOCKED] Tasks waiting on something (with reason)
 - Show in `/compound:status` output
 
+### Outcome 8: Session Close Protocol
+
+Before session ends, run this checklist:
+```
+[ ] 1. git status              (check what changed)
+[ ] 2. git add <files>         (stage code changes)
+[ ] 3. git commit -m "..."     (commit code)
+[ ] 4. Update rounds.jsonl     (add round entry if closing)
+[ ] 5. Update context.md       (current state)
+[ ] 6. Update QUICKSTART.md    (regenerate for next session)
+[ ] 7. git push                (push to remote)
+```
+
+**Critical Rule:** *"Work is not done until pushed AND tracking files updated."*
+
+### Outcome 9: Instant Continuity
+
+QUICKSTART.md must always be current so any new Claude instance can pick up immediately:
+- Auto-regenerated at session close
+- Contains: current round, type, status, next steps, recent history
+- Under 500 chars total
+- Points to CLAUDE.md for full context
+
 ---
 
 ## What Exists in This Methodology
 
 | File | Purpose |
 |------|---------|
+| `.compound-beads/QUICKSTART.md` | Instant continuity (<500 chars, auto-updated) |
 | `.compound-beads/context.md` | Portable memory (current state) |
-| `.compound-beads/rounds.jsonl` | Machine-readable round history |
+| `.compound-beads/rounds.jsonl` | Machine-readable round history (event-based) |
 | `.compound-beads/learnings.md` | Compounded insights across rounds |
 | `.compound-beads/archive/` | Compressed old rounds |
 | `CLAUDE.md` | Human-readable handoff document |
-| `docs/COMPOUND_BEADS_METHODOLOGY.md` | Full methodology documentation |
+| `docs/METHODOLOGY.md` | Full v2.0 methodology documentation |
 
 ---
 
-## Expert Panel Process
+## Expert Panel Process (When Needed)
+
+> **Optional tool.** Use when genuinely stuck, not as standard practice.
 
 ### The Core Principle
 
@@ -188,10 +265,11 @@ If I can accomplish a useful task using the skill's primitives that was never ex
 When initializing Compound Beads for a new project:
 
 1. Create `.compound-beads/` directory
-2. Create `context.md` from template
-3. Create empty `rounds.jsonl`
-4. Create empty `learnings.md`
-5. Add reference line to CLAUDE.md (if it exists)
+2. Create `QUICKSTART.md` from template
+3. Create `context.md` from template
+4. Create empty `rounds.jsonl`
+5. Create empty `learnings.md`
+6. Add reference line to CLAUDE.md (if it exists)
 6. Start Round 1 with initialization goal
 
 ---
