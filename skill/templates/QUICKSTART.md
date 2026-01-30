@@ -15,6 +15,13 @@
 2. Current tasks: [list from context.md]
 3. Blockers: [any blocked items or "None"]
 
+## Intelligence Summary
+
+- **Top open question**: [Most urgent unresolved question, or "None"]
+- **Discovered work**: [New items found in recent sessions, or "None"]
+- **Key recent decision**: [Most significant decision from last session, or "None"]
+- **Last session**: [UUID] *(resume: `claude -r [UUID]`)*
+
 ## Recent History
 
 | Round | Type | Goal | Status |

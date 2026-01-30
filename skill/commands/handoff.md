@@ -16,13 +16,12 @@ Prepare for context transition with full session close protocol.
 ### Step 1: Run Session Close Protocol
 
 Execute all steps from `/compound:close-session`:
-1. git status
-2. git add [files]
-3. git commit -m "[Round N] ..."
-4. Update rounds.jsonl
-5. Update context.md
-6. Regenerate QUICKSTART.md
-7. git push
+1. Detect session ID
+2. git status / add / commit
+3. Run Session Intelligence Capture (process-session protocol)
+4. Persist to artifacts (rounds.jsonl, context.md, learnings.md)
+5. Regenerate QUICKSTART.md
+6. git push
 
 ### Step 2: Sync CLAUDE.md
 
@@ -128,6 +127,8 @@ Add to context.md:
 **Goal:** Implement user authentication
 **Progress:** 60% (3/5 tasks)
 **Status:** in_progress
+**Session ID:** [UUID] *(resume: `claude -r [UUID]`)*
+**All Sessions This Round:** [list of UUIDs]
 
 **For Next Session:**
 1. Continue validation logic in `/src/lib/auth.ts`
@@ -141,6 +142,11 @@ Add to context.md:
 - Using Supabase Auth (decision made in Round 51)
 - Social login working (Google, GitHub)
 - Email/password fallback in progress
+
+**Intelligence Summary:**
+- Key decisions: [list from session]
+- Open questions: [unresolved questions]
+- Discovered work: [new items found]
 ```
 
 ## Verification Checklist
@@ -149,12 +155,14 @@ Before declaring handoff complete:
 
 ```
 [x] Session close protocol completed (git pushed)
+[x] Session Intelligence Capture completed
 [x] CLAUDE.md reflects current state
 [x] Previous rounds compressed if needed
 [x] context.md under 5000 chars
-[x] QUICKSTART.md regenerated
+[x] QUICKSTART.md regenerated (with intelligence summary)
 [x] Ready/blocked tasks clearly marked
-[x] Handoff summary written
+[x] Handoff summary written (with session IDs)
+[x] learnings.md updated (if learnings captured)
 ```
 
 ## Example Output

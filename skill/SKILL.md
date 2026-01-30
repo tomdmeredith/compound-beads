@@ -1,8 +1,8 @@
-# Compound Beads Skill v2.0
+# Compound Beads Skill v2.1
 
 A methodology for iterative development that compounds knowledge across sessions.
 
-**Key features: Round types, narrative capture, instant continuity, AI-initiated prompts.**
+**Key features: Round types, narrative capture, session intelligence capture, instant continuity, AI-initiated prompts.**
 
 > Built from 127 rounds of real usage feedback. Evidence-based evolution.
 
@@ -39,6 +39,11 @@ I proactively prompt based on conditions, not relying on user memory:
 | Pattern discovered | "I noticed a useful pattern - add to learnings.md?" |
 | Bead open > 7 days | "This bead has been open 7+ days - close, defer, or update?" |
 | Completion signals detected ("that worked", "it's fixed") | "Great! Let me capture what we learned..." |
+| Session start (no session ID recorded yet) | "Let me record this session ID for traceability..." |
+| Session magnitude assessed as SIGNIFICANT | "This was a significant session. Let me run full intelligence capture..." |
+| 3+ decisions made in session | "Several decisions were made. Let me capture the rationale..." |
+| Error or dead end encountered | "We hit a dead end. Let me record this so future sessions avoid it..." |
+| Open question persists 3+ sessions | "The question about [X] has been open for 3 sessions. Dedicate a round or deprioritize?" |
 
 ---
 
@@ -57,6 +62,11 @@ The skill builds on Claude's existing primitives (Read, Write, Edit). These doma
 | `mark-blocked` | Mark task as blocked with reason | context.md |
 | `archive-round` | Move completed round to archive | archive/, context.md |
 | `sync-docs` | Update CLAUDE.md from context.md | CLAUDE.md |
+| `get-session-id` | Detect current Claude Code session UUID | (read-only) |
+| `add-decision` | Record a decision with rationale | rounds.jsonl, context.md |
+| `add-question` | Record an open question | context.md |
+| `add-prevention-rule` | Record a mistake-derived prevention rule | learnings.md |
+| `promote-pattern` | Promote observation → pattern → guideline | learnings.md |
 
 **Key insight**: These primitives are just patterns for using Read/Write/Edit. I can always use raw primitives directly on the files.
 
@@ -73,7 +83,8 @@ The skill builds on Claude's existing primitives (Read, Write, Edit). These doma
 | `/compound:status` | Show current round state and tasks |
 | `/compound:compile` | Compile Arc statements into presentations |
 | `/compound:research` | Search learnings for relevant patterns |
-| `/compound:close-session` | Run session close protocol |
+| `/compound:process-session` | Extract session intelligence into CB artifacts |
+| `/compound:close-session` | Run session close protocol (calls process-session) |
 
 **Note:** Many of these run automatically via AI-initiated prompts. Manual invocation optional.
 
@@ -153,21 +164,21 @@ Before marking a round complete, extract learnings:
 - What surprised us?
 - Document in `.compound-beads/learnings.md`
 
-### Outcome 6: Memory Management
+### Outcome 7: Memory Management
 
 Context files should not grow unbounded:
 - If context.md > 5000 chars, archive old rounds
 - Preserve recent rounds (last 3) in detail
 - Compress older rounds to single-line summaries in archive/
 
-### Outcome 7: Ready Status
+### Outcome 8: Ready Status
 
 Track what can be immediately resumed:
 - [READY] Tasks with no blockers
 - [BLOCKED] Tasks waiting on something (with reason)
 - Show in `/compound:status` output
 
-### Outcome 8: Session Close Protocol
+### Outcome 9: Session Close Protocol
 
 Before session ends, run this checklist:
 ```
@@ -182,13 +193,33 @@ Before session ends, run this checklist:
 
 **Critical Rule:** *"Work is not done until pushed AND tracking files updated."*
 
-### Outcome 9: Instant Continuity
+### Outcome 10: Instant Continuity
 
 QUICKSTART.md must always be current so any new Claude instance can pick up immediately:
 - Auto-regenerated at session close
 - Contains: current round, type, status, next steps, recent history
 - Under 500 chars total
 - Points to CLAUDE.md for full context
+
+### Outcome 11: Session Traceability
+
+Every round tracks which Claude Code sessions contributed to it:
+- Session ID (UUID v4) captured at round start, session close, and arc capture
+- Multiple sessions per round supported (a round may span sessions)
+- Session IDs enable `claude -r <session-id>` to return to any conversation
+- Stored in `rounds.jsonl` events and `context.md`
+
+**Detection method:** Extract UUID from scratchpad directory path, or read last entry of `~/.claude/history.jsonl`.
+
+### Outcome 12: Session Intelligence Capture
+
+Before closing a session, systematically extract all valuable intelligence:
+- **9 categories captured**: Work items, code changes, decisions, learnings, errors/dead ends, continuity, blockers, patterns, questions
+- **Magnitude-based depth**: SMALL sessions get lightweight capture, SIGNIFICANT sessions get full extraction
+- **Compounding mechanisms**: Three-tier knowledge promotion (observation → pattern → guideline), mistake → prevention rule pipeline, dead ends registry, persistent open questions
+- **Completeness test**: After processing, a fresh Claude instance can understand what was done, why, what not to do, where to resume, what's new, what's unknown, and what patterns to apply — without needing the raw session transcript
+
+See `/compound:process-session` for the full protocol.
 
 ---
 
@@ -202,7 +233,16 @@ QUICKSTART.md must always be current so any new Claude instance can pick up imme
 | `.compound-beads/learnings.md` | Compounded insights across rounds |
 | `.compound-beads/archive/` | Compressed old rounds |
 | `CLAUDE.md` | Human-readable handoff document |
-| `docs/METHODOLOGY.md` | Full v2.0 methodology documentation |
+| `docs/METHODOLOGY.md` | Full methodology documentation |
+
+**Templates (for presentations and reference):**
+
+| Template | Purpose |
+|----------|---------|
+| `templates/beat-sheet.md` | Script-ready narrative for presentations |
+| `templates/round-card.md` | Single-page round summary for quick reference |
+| `templates/round.md` | Full round documentation with Arc |
+| `templates/expert-panel.md` | Expert panel notes |
 
 ---
 
@@ -270,7 +310,7 @@ When initializing Compound Beads for a new project:
 4. Create empty `rounds.jsonl`
 5. Create empty `learnings.md`
 6. Add reference line to CLAUDE.md (if it exists)
-6. Start Round 1 with initialization goal
+7. Start Round 1 with initialization goal
 
 ---
 

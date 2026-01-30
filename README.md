@@ -1,10 +1,17 @@
-# Compound Beads Methodology v2.0
+# Compound Beads Methodology v2.1
 
 > **A framework for iterative development with AI agents that compounds knowledge across sessions.**
 >
 > *Evidence-based evolution: Built from 127 rounds of real usage feedback.*
 
 Compound Beads transforms chaotic, context-losing AI sessions into structured, compounding development rounds. Each round is a unit of focused work that builds on everything before it.
+
+**v2.1 Key Changes:**
+- **Session Intelligence Capture**: Every session is processed at close — work items, decisions, learnings, errors, patterns, and questions are extracted and persisted
+- **Session Traceability**: Every round and event is linked to Claude Code session UUIDs for full traceability
+- **Three-Tier Knowledge Promotion**: Observations → Recognized Patterns → Established Guidelines
+- **Prevention Rules**: Errors with generalizable root causes become rules that surface before future work
+- **Dead Ends Registry**: Failed approaches are recorded so they're never repeated
 
 **v2.0 Key Changes:**
 - **Round Types**: Feature, Bug Fix, Triage, Polish, Infrastructure
@@ -51,7 +58,7 @@ claude
 > "Set up compound beads for this project"
 ```
 
-Claude creates `.compound-beads/` with project-specific state. Commands: `/compound:start-round`, `/compound:handoff`, `/compound:compound`, `/compound:research`, `/compound:status`.
+Claude creates `.compound-beads/` with project-specific state. Commands: `/compound:start-round`, `/compound:handoff`, `/compound:compound`, `/compound:research`, `/compound:status`, `/compound:process-session`.
 
 **What's different about Path B:**
 - Auto-triggers (context window detection, documentation sync)
@@ -216,6 +223,7 @@ See [templates/CLAUDE.md](./templates/CLAUDE.md) for the full template.
 | `/compound:compound` | Extract learnings and capture Arc |
 | `/compound:compile` | Compile Arc statements into presentations |
 | `/compound:research` | Search learnings for relevant patterns (Step 0) |
+| `/compound:process-session` | Capture session intelligence (auto-runs at close) |
 | `/compound:panel` | Facilitate expert panel (optional) |
 
 **Note:** Most documentation happens automatically via AI-initiated prompts. Commands are conveniences, not requirements.
@@ -238,8 +246,7 @@ This methodology was developed and refined across **52 rounds** of building Clon
 **Path A (Starter Kit):**
 1. Copy `.claude/` to your project
 2. Create `CLAUDE.md` from template
-3. Run `/ready` to begin your first session
-4. Start Round 1 and get to work
+3. Start Round 1 and get to work
 
 **Path B (Skill - Recommended):**
 1. Install skill to `~/.claude/skills/compound-beads/`

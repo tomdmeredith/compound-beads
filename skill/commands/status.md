@@ -29,6 +29,14 @@ Goal: Implement user authentication
 Status: in_progress (started 2026-01-09)
 Expert Panel: completed
 
+### Session Info
+- **Current Session**: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+  *(resume: `claude -r a1b2c3d4-e5f6-7890-abcd-ef1234567890`)*
+- **Sessions This Round**: 3
+  1. `f0e1d2c3-...` (2026-01-09)
+  2. `a4b5c6d7-...` (2026-01-09)
+  3. `a1b2c3d4-...` (2026-01-10) ← current
+
 ### Progress
 Tasks: 3/5 complete (60%)
 - [x] Set up Supabase Auth
@@ -52,6 +60,11 @@ Tasks: 3/5 complete (60%)
 - [BLOCKED] Password reset flow (needs: email provider setup)
 - [BLOCKED] Deploy to staging (needs: env vars configured)
 
+### Intelligence Summary
+- **Open Questions**: 1 (Should users link multiple social accounts?)
+- **Discovered Work**: 2 new items
+- **Recent Decisions**: 2 captured this round
+
 ### Recent Rounds
 | Round | Goal | Status |
 |-------|------|--------|
@@ -73,7 +86,8 @@ When auto-triggered at session start, show compact version:
 
 ```
 Round 53 (cb-f3a8): User authentication [60% complete]
-Ready: 2 tasks | Blocked: 2 tasks | Expert panel: done
+Session: a1b2c3d4-... (3rd this round)
+Ready: 2 tasks | Blocked: 2 tasks | Questions: 1 open
 Last update: 2 hours ago
 ```
 
@@ -86,6 +100,10 @@ Round 53 (cb-f3a8): Implement user authentication
 Status: in_progress | 60% complete (3/5 tasks)
 Expert Panel: completed
 
+Session: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+  Resume: claude -r a1b2c3d4-e5f6-7890-abcd-ef1234567890
+  Sessions this round: 3
+
 Ready to Work On:
   [READY] Continue email verification logic
   [READY] Style the signup form
@@ -95,6 +113,9 @@ Blocked:
     └─ Needs: Email provider setup (Resend/SendGrid)
   [BLOCKED] Deploy to staging
     └─ Needs: Environment variables configured
+
+Intelligence:
+  Open questions: 1 | Discovered work: 2 | Decisions: 2
 
 Modified: 8 files this round
 Context.md: 2,400 chars (healthy)

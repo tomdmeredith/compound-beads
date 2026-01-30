@@ -13,6 +13,10 @@ Extract learnings AND capture The Arc from the current round before marking it c
 
 ## Process
 
+### 0. Run Session Intelligence Capture
+
+Before extracting round-level learnings, first run `/compound:process-session` to capture session-level intelligence (work items, decisions, errors, patterns, questions). This ensures nothing from the current session is lost before focusing on the broader round narrative.
+
 ### 1. Review Round Accomplishments
 Gather from context:
 - What was the goal?
@@ -102,7 +106,7 @@ Append to `.compound-beads/learnings.md`:
 
 ### 6. Append Arc to rounds.jsonl
 ```json
-{"event":"arc_captured","machineId":"cb-f3a8","startedBelieving":"Users need email/password auth","endedBelieving":"Social login is essential","transformation":"Observing signup friction..."}
+{"event":"arc_captured","sessionId":"<uuid>","machineId":"cb-f3a8","startedBelieving":"Users need email/password auth","endedBelieving":"Social login is essential","transformation":"Observing signup friction..."}
 ```
 
 ### 7. Update Round Status
@@ -113,6 +117,7 @@ Mark round as complete in context.md:
 - **Completed**: 2026-01-09
 - **Arc Captured**: YES
 - **Learnings Extracted**: YES
+- **Session Intelligence Captured**: YES
 ```
 
 ### 8. Archive if Needed

@@ -37,6 +37,8 @@ I read this file to understand the current state and continue work seamlessly.
 - **Status**: [pending | in_progress | complete]
 - **Expert Panel Status**: [not_required | completed] *(optional - use when stuck)*
 - **Started**: [ISO_TIMESTAMP]
+- **Session ID**: [UUID] *(resume: `claude -r [UUID]`)*
+- **Sessions This Round**: [comma-separated UUIDs if round spans multiple sessions]
 
 ## Modified Files This Round
 
@@ -54,6 +56,25 @@ Tasks waiting on something:
 
 - [BLOCKED] [Task description]
   └─ Needs: [What's blocking it]
+
+## Discovered Work
+
+New tasks or issues identified during sessions but not yet started:
+
+- [DISCOVERED] [Task description] - Source: [How it was found]
+
+## Open Questions
+
+Questions raised but unanswered — carry forward until resolved:
+
+- [OPEN] [Question] - Raised: [Date] - Urgency: [blocking | important | curious]
+- [RESOLVED] [Question] - Answer: [Resolution] - Resolved: [Date]
+
+## Session Decisions
+
+Key decisions made during sessions that affect ongoing work:
+
+- **[Decision title]**: [Choice made] because [rationale]. Alternatives rejected: [what was not chosen]
 
 ## My Guidelines
 
@@ -85,6 +106,12 @@ Expert panels are useful when genuinely stuck or facing novel problems.
 | Date | Round | Activity |
 |------|-------|----------|
 | [DATE] | [ROUND] | [BRIEF_DESCRIPTION] |
+
+## Session History
+
+| Session ID | Date | Activity |
+|-----------|------|----------|
+| [UUID] | [DATE] | [Started round N / Continued round N / Closed round N] |
 
 ## Partial Completion Tracking
 

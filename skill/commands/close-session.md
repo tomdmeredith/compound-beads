@@ -1,8 +1,8 @@
 # /compound:close-session
 
-Run the session close protocol before ending work.
+Run the session close protocol before ending work. Includes Session Intelligence Capture.
 
-**Critical Rule:** *"Work is not done until pushed AND tracking files updated."*
+**Critical Rule:** *"Work is not done until pushed AND tracking files updated AND session intelligence captured."*
 
 ## Trigger
 
@@ -15,10 +15,15 @@ Run the session close protocol before ending work.
 
 Run these steps in order. Do not skip steps.
 
-### Step 1: Check Git Status
+### Step 1: Detect Session ID
+
+Detect the current Claude Code session UUID (see `/compound:process-session` Step 1 for methods). Record it for use in all subsequent events.
+
+### Step 2: Check Git Status
 
 ```bash
 git status
+git diff --name-status
 ```
 
 **What to look for:**
@@ -26,7 +31,7 @@ git status
 - Untracked files that should be tracked
 - Files that shouldn't be committed (.env, credentials, etc.)
 
-### Step 2: Stage Code Changes
+### Step 3: Stage Code Changes
 
 ```bash
 git add [specific files]
@@ -37,7 +42,7 @@ git add [specific files]
 - Review what you're staging
 - Don't stage sensitive files
 
-### Step 3: Commit Code
+### Step 4: Commit Code
 
 ```bash
 git commit -m "[Round N] [description]"
@@ -53,39 +58,56 @@ git commit -m "[Round N] [description]"
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-### Step 4: Update rounds.jsonl
+### Step 5: Run Session Intelligence Capture
 
-If closing a round, append completion event:
+Execute the `/compound:process-session` protocol to extract all session intelligence:
+
+1. **Assess magnitude** (SMALL / MEDIUM / SIGNIFICANT)
+2. **Extract work items** — completed, in-progress, discovered, deferred, invalidated
+3. **Extract intelligence** — decisions, learnings, errors/dead ends, patterns, questions
+4. **Compose continuity package** — stopping point, mental model, next steps
+
+See `process-session.md` for the full protocol. The depth scales with session magnitude.
+
+### Step 6: Persist to Artifacts
+
+Write all extracted intelligence to the appropriate files:
+
+**rounds.jsonl** — Append `session_processed` event with full intelligence payload:
 ```json
-{"event":"round_completed","machineId":"cb-xxxx","displayId":"N","completed":"2026-01-22T...","closedBySession":"session-xyz","keyInsight":"..."}
+{"event":"session_processed","sessionId":"<uuid>","machineId":"cb-xxxx","displayId":"N","timestamp":"...","magnitude":"...","work_summary":{...},"decisions":[...],"learnings":[...],"errors":[...],"patterns":[...],"questions_raised":[...],"continuity":{...}}
 ```
 
-If mid-round, append progress event:
+If closing a round, also append:
 ```json
-{"event":"session_ended","machineId":"cb-xxxx","displayId":"N","progress":"3/5 tasks complete","lastActivity":"2026-01-22T..."}
+{"event":"round_completed","sessionId":"<uuid>","machineId":"cb-xxxx","displayId":"N","completed":"...","keyInsight":"..."}
 ```
 
-### Step 5: Update context.md
-
-Update the Current Round section:
-```markdown
-## Current Round
-- **Status**: [in_progress | complete]
-- **Last Activity**: [ISO timestamp]
-- **Progress**: [X/Y tasks complete]
-
-## Modified Files This Round
-- `/path/to/file1.ts` - [description]
-- `/path/to/file2.ts` - [description]
-
-## Ready Tasks
-- [READY] [Next task to do]
-
-## Blocked Tasks
-- [BLOCKED] [Task] - Needs: [what's blocking]
+If mid-round, also append:
+```json
+{"event":"session_ended","sessionId":"<uuid>","machineId":"cb-xxxx","displayId":"N","progress":"3/5 tasks complete","lastActivity":"..."}
 ```
 
-### Step 6: Regenerate QUICKSTART.md
+Also append individual high-value events for searchability (`decision_made`, `learning_captured`, `error_captured`, `pattern_recognized`, `question_raised`).
+
+**context.md** — Update all sections:
+- Current Round (status, progress, session ID)
+- Modified Files This Round
+- Ready Tasks / Blocked Tasks
+- Discovered Work (new items found)
+- Open Questions (new + resolved)
+- Session Decisions (choices made)
+- Partial Completion Tracking (stopping point)
+- Handoff Summary (continuity package)
+- Recent Activity (table entry)
+- Session History (append)
+
+**learnings.md** — Append new learnings, update:
+- Prevention Rules (from errors with generalizable root causes)
+- Dead Ends Registry (from failed approaches)
+- Recognized Patterns (with promotion check: 3+ occurrences → Established Guideline)
+
+### Step 7: Regenerate QUICKSTART.md
 
 Regenerate `.compound-beads/QUICKSTART.md` from current state:
 
@@ -107,6 +129,13 @@ Regenerate `.compound-beads/QUICKSTART.md` from current state:
 2. Current tasks: [ready tasks]
 3. Blockers: [blocked tasks or "None"]
 
+## Intelligence Summary
+
+- **Top open question**: [Most urgent or "None"]
+- **Discovered work**: [New items or "None"]
+- **Key recent decision**: [Most significant or "None"]
+- **Last session**: [UUID] *(resume: `claude -r [UUID]`)*
+
 ## Recent History
 
 | Round | Type | Goal | Status |
@@ -116,7 +145,7 @@ Regenerate `.compound-beads/QUICKSTART.md` from current state:
 | [N-2] | [type] | [goal] | complete |
 ```
 
-### Step 7: Git Push
+### Step 8: Git Push
 
 ```bash
 git push
@@ -129,18 +158,21 @@ If push fails:
 - Fix any issues
 - Push again
 
-Do NOT tell the user "ready to push when you are" - YOU must push.
+Do NOT tell the user "ready to push when you are" — YOU must push.
 
 ## Verification Checklist
 
 Before declaring session complete:
 
 ```
+[x] Session ID detected and recorded
 [x] git status shows clean working tree
 [x] All changes committed with [Round N] prefix
-[x] rounds.jsonl updated with latest events
-[x] context.md reflects current state
-[x] QUICKSTART.md regenerated
+[x] Session Intelligence Capture completed (process-session protocol)
+[x] rounds.jsonl updated (session_processed + individual events)
+[x] context.md reflects current state (including new sections)
+[x] learnings.md updated (if learnings/errors/patterns captured)
+[x] QUICKSTART.md regenerated (with intelligence summary)
 [x] git push succeeded
 ```
 
@@ -149,46 +181,54 @@ Before declaring session complete:
 ```
 Running session close protocol...
 
-[1/7] Git status
+[1/8] Detecting session ID
+  Session: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+
+[2/8] Git status
   Modified: src/auth/login.ts
   Modified: src/auth/session.ts
   New: src/auth/social.ts
 
-[2/7] Staging changes
-  Added: src/auth/login.ts
-  Added: src/auth/session.ts
-  Added: src/auth/social.ts
+[3/8] Staging changes
+  Added: 3 files
 
-[3/7] Committing
+[4/8] Committing
   [Round 53] Add social login authentication
 
-[4/7] Updating rounds.jsonl
-  Appended: session_ended event
+[5/8] Session Intelligence Capture
+  Magnitude: MEDIUM (45 min, 5 files)
+  Work items: 3 completed, 1 in-progress, 1 discovered
+  Decisions: 2 captured
+  Learnings: 2 captured
+  Errors: 1 near-miss recorded
+  Questions: 1 raised (important)
 
-[5/7] Updating context.md
-  Progress: 4/5 tasks complete
-  Ready: [1 task]
-  Blocked: [0 tasks]
+[6/8] Persisting to artifacts
+  rounds.jsonl: 4 events appended
+  context.md: Updated (all sections)
+  learnings.md: 2 learnings + 1 prevention rule added
 
-[6/7] Regenerating QUICKSTART.md
-  Updated for Round 53, in_progress
+[7/8] Regenerating QUICKSTART.md
+  Updated with intelligence summary
 
-[7/7] Pushing to remote
-  ✓ Pushed to origin/main
+[8/8] Pushing to remote
+  Pushed to origin/main
 
-Session close complete. Safe to end conversation.
+Session close complete. All intelligence captured.
 ```
 
 ## When to Skip Steps
 
 | Situation | What to Skip |
 |-----------|--------------|
-| No code changes | Steps 1-3 (git) |
-| Research only | Steps 1-3 (git) |
+| No code changes | Steps 2-4 (git stage/commit) |
+| Research only | Steps 2-4 (git stage/commit) |
 | Round complete | Use `/compound:compound` first, then close |
 
 But NEVER skip:
-- Updating context.md
+- Session ID detection
+- Session Intelligence Capture (Step 5)
+- Updating context.md and learnings.md
 - Regenerating QUICKSTART.md
 - Git push (if there were changes)
 

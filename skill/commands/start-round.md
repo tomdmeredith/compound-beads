@@ -13,7 +13,16 @@ Check `.compound-beads/context.md`:
 - Is there an in-progress round? If yes, prompt user about completing it first.
 - What's the last round number?
 
-### 2. Determine Round Type
+### 2. Detect Session ID
+
+Detect the current Claude Code session UUID:
+1. Extract UUID from scratchpad directory path (preferred)
+2. Fallback: Read last entry of `~/.claude/history.jsonl` for `sessionId` field
+3. Fallback: Find most recently modified `.jsonl` in `~/.claude/projects/<encoded-path>/`
+
+This session ID will be recorded in round events and context.md.
+
+### 3. Determine Round Type
 
 Ask or infer round type:
 
@@ -25,11 +34,11 @@ Ask or infer round type:
 | **polish** | Refine existing features | 5-10 small tasks |
 | **infrastructure** | DevOps, config, DNS | 1-3 tasks |
 
-### 3. Generate Round Identifiers
+### 4. Generate Round Identifiers
 - **Display ID**: Increment sequential integer (e.g., Round 53, 54, 55 - no decimals)
 - **Machine ID**: Generate hash `cb-{4-char-hash}` from goal + timestamp
 
-### 4. Set Goal
+### 5. Set Goal
 Update context.md:
 ```markdown
 ## Current Round
@@ -40,18 +49,20 @@ Update context.md:
 - **Status**: in_progress
 - **Expert Panel Status**: not_required
 - **Started**: [ISO timestamp]
+- **Session ID**: [UUID] *(resume: `claude -r [UUID]`)*
+- **Sessions This Round**: [UUID]
 
 ## Modified Files This Round
 (none yet)
 ```
 
-### 5. Append to Rounds Log
+### 6. Append to Rounds Log
 Append event to `.compound-beads/rounds.jsonl`:
 ```json
-{"event":"round_started","machineId":"cb-f3a8","displayId":"53","type":"feature","goal":"...","started":"2026-01-09T...","actor":"claude"}
+{"event":"round_started","sessionId":"<uuid>","machineId":"cb-f3a8","displayId":"53","type":"feature","goal":"...","started":"2026-01-09T...","actor":"claude"}
 ```
 
-### 6. Sizing Check
+### 7. Sizing Check
 Based on type, remind of expected scope:
 
 | Type | If scope seems wrong... |
@@ -61,7 +72,7 @@ Based on type, remind of expected scope:
 | polish >10 tasks | "Consider prioritizing - which polish items have most impact?" |
 | any <30 min | "This might fit as a sub-task in the current round" |
 
-### 7. Sync Documentation
+### 8. Sync Documentation
 Add to CLAUDE.md:
 ```markdown
 ## Current Work (Round 53)
