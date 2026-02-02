@@ -1,10 +1,15 @@
-# Compound Beads Methodology v2.1
+# Compound Beads Methodology v3.0
 
 > **A framework for iterative development with AI agents that compounds knowledge across sessions.**
 >
 > *Evidence-based evolution: Built from 127 rounds of real usage feedback.*
 
 Compound Beads transforms chaotic, context-losing AI sessions into structured, compounding development rounds. Each round is a unit of focused work that builds on everything before it.
+
+**v3.0 Key Changes:**
+- **AGENTS.md Passive Context Layer**: Auto-triggers, skills, tools, and rules always in prompt via Claude Code's native AGENTS.md — solves the "fire alarm paradox"
+- **Skill Discovery**: `/compound:discover` scans available skills and copies them to the project for independent evolution
+- **Per-Project Skills**: Skills copied to `.compound-beads/skills/` can diverge from global versions
 
 **v2.1 Key Changes:**
 - **Session Intelligence Capture**: Every session is processed at close — work items, decisions, learnings, errors, patterns, and questions are extracted and persisted
@@ -58,9 +63,11 @@ claude
 > "Set up compound beads for this project"
 ```
 
-Claude creates `.compound-beads/` with project-specific state. Commands: `/compound:start-round`, `/compound:handoff`, `/compound:compound`, `/compound:research`, `/compound:status`, `/compound:process-session`.
+Claude creates `.compound-beads/` and `AGENTS.md` with project-specific state. Commands: `/compound:start-round`, `/compound:handoff`, `/compound:compound`, `/compound:research`, `/compound:status`, `/compound:process-session`, `/compound:discover`.
 
 **What's different about Path B:**
+- **Passive context** via AGENTS.md (auto-triggers always in prompt, no skill loading needed)
+- **Skill discovery** (`/compound:discover` copies skills to project)
 - Auto-triggers (context window detection, documentation sync)
 - Per-project state (`.compound-beads/` created on demand)
 - Machine-readable history (`rounds.jsonl`)
@@ -71,7 +78,7 @@ Claude creates `.compound-beads/` with project-specific state. Commands: `/compo
 ```
 compound-beads/
 ├── skill/                       # Path B: Claude Code Skill (Recommended)
-│   ├── SKILL.md                 # Main skill v2.0 (AI-initiated prompts)
+│   ├── SKILL.md                 # Main skill v3.0 (passive context + discovery)
 │   ├── commands/                # /compound:* commands
 │   │   ├── start-round.md       # Start round with type and goal
 │   │   ├── handoff.md           # Context transition + close protocol
@@ -80,8 +87,10 @@ compound-beads/
 │   │   ├── status.md            # Show current state
 │   │   ├── compile.md           # Compile Arcs into presentations
 │   │   ├── research.md          # Search learnings for patterns (Step 0)
-│   │   └── close-session.md     # Session close protocol
+│   │   ├── close-session.md     # Session close protocol
+│   │   └── discover.md          # Scan skills/tools, add to project (v3.0)
 │   ├── templates/               # Per-project templates
+│   │   ├── AGENTS.md            # Passive context layer (v3.0)
 │   │   ├── QUICKSTART.md        # Instant continuity (<500 chars)
 │   │   ├── context.md           # Portable memory
 │   │   ├── round.md             # Round documentation with Arc
@@ -225,6 +234,7 @@ See [templates/CLAUDE.md](./templates/CLAUDE.md) for the full template.
 | `/compound:research` | Search learnings for relevant patterns (Step 0) |
 | `/compound:process-session` | Capture session intelligence (auto-runs at close) |
 | `/compound:panel` | Facilitate expert panel (optional) |
+| `/compound:discover` | Scan skills/tools, copy to project, update AGENTS.md |
 
 **Note:** Most documentation happens automatically via AI-initiated prompts. Commands are conveniences, not requirements.
 

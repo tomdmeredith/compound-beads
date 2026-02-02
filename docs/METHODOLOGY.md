@@ -1,4 +1,4 @@
-# Compound Beads Methodology v2.0
+# Compound Beads Methodology v3.0
 
 > **Evidence-Based Evolution**
 > Built from 127 rounds of real usage feedback.
@@ -46,6 +46,48 @@ We lean into documentation. We automate enforcement.
 | **Session Close Protocol** | Automatic enforcement at conversation end |
 | **QUICKSTART.md** | Instant continuity for new Claude instances |
 | **AI-Initiated Prompts** | Claude prompts, not user remembers |
+
+---
+
+## What Changed in v3.0
+
+| Added | Reason |
+|-------|--------|
+| **AGENTS.md** | Passive context layer — auto-triggers always in prompt without skill loading |
+| **`/compound:discover`** | Scan available skills and tools, copy to project, compress into AGENTS.md |
+| **Per-project skills** | Skills in `.compound-beads/skills/` can evolve independently |
+| **Outcome 13** | Passive Context Layer |
+| **Outcome 14** | Skill Artifact Protocol |
+
+### The Fire Alarm Paradox
+
+Auto-triggers (v2.0) only fire when the compound-beads skill is loaded. But if the skill isn't loaded, the triggers that would prompt loading can't fire — like a fire alarm that only works when someone is already watching for fires.
+
+**Solution:** `AGENTS.md` is Claude Code's native passive context file, read automatically at the start of every session. By placing the CB methodology, auto-triggers, configured skills, and project rules in AGENTS.md, they are always in the prompt. No skill loading needed.
+
+### AGENTS.md Structure
+
+```
+AGENTS.md (project root)
+├── Methodology: Compound Beads    # Core loop, files, sizing
+│   ├── Session Protocol           # Start/end procedures
+│   ├── Auto-Triggers              # Condition → action table
+│   └── Narrative Capture          # Arc format
+├── Skills                         # Discovered skills (name | desc | triggers | output)
+├── Tools & MCPs                   # Available tools and MCP servers
+└── Project Rules                  # Project-specific rules (grows over time)
+```
+
+### Skill Discovery (`/compound:discover`)
+
+1. Scans `~/.claude/skills/` for available skills
+2. Presents categorized list to user
+3. User selects which skills to add
+4. Selected skills are copied to `.compound-beads/skills/{name}/`
+5. Compressed one-line entries added to AGENTS.md
+6. Tools and MCPs scanned and added similarly
+
+Each copied skill can evolve independently per-project. Skill outputs go to `.compound-beads/skills/{name}/output/`.
 
 ---
 
@@ -306,13 +348,21 @@ Earlier Rounds             → Table summary (1 line per round)
 
 ```
 project/
+├── AGENTS.md                    # Passive context layer (v3.0, always loaded)
 ├── CLAUDE.md                    # Human-readable handoff document
 └── .compound-beads/
     ├── QUICKSTART.md            # Instant continuity (<500 chars)
     ├── context.md               # Portable memory for Claude
     ├── rounds.jsonl             # Machine-readable round history
     ├── learnings.md             # Compounded insights
-    └── archive/                 # Compressed old rounds
+    ├── archive/                 # Compressed old rounds
+    └── skills/                  # Per-project skill copies (v3.0)
+        ├── brand-voice/
+        │   ├── SKILL.md         # Copied from global, can diverge
+        │   └── output/          # Project-specific artifacts
+        └── seo-content/
+            ├── SKILL.md
+            └── output/
 ```
 
 ### rounds.jsonl Format (Event-Based)

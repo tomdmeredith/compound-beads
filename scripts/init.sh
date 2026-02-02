@@ -242,20 +242,71 @@ EOF
 # Create .gitkeep for plans
 touch .claude/plans/.gitkeep
 
+# Create AGENTS.md from template (v3.0)
+echo -e "${GREEN}Creating AGENTS.md (passive context layer)...${NC}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEMPLATE_DIR="${SCRIPT_DIR}/../skill/templates"
+
+if [ -f "${TEMPLATE_DIR}/AGENTS.md" ]; then
+    cp "${TEMPLATE_DIR}/AGENTS.md" AGENTS.md
+    sed -i.bak "s/\[NAME\]/${PROJECT_NAME}/g" AGENTS.md
+    sed -i.bak "s/\[DATE\]/${TODAY}/g" AGENTS.md
+    rm -f AGENTS.md.bak
+else
+    # Fallback: create minimal AGENTS.md if template not found
+    cat > AGENTS.md << AGENTSEOF
+# AGENTS.md
+
+> Compound Beads v3.0 | Project: ${PROJECT_NAME} | Initialized: ${TODAY}
+
+## Methodology: Compound Beads
+
+Core loop: START ROUND > WORK > COMPOUND (Arc + learnings) > CLOSE (push + update)
+
+Files: CLAUDE.md (handoff) | .compound-beads/QUICKSTART.md (continuity) | context.md (state) | rounds.jsonl (history) | learnings.md (insights)
+
+Round types: feature | bug_fix | triage | polish | infrastructure
+Sizing: 30min-4hr. Break larger work into multiple rounds.
+
+### Session Protocol
+Start: Read QUICKSTART.md > context.md > scan recent learnings
+End: git commit > session intelligence capture > update tracking files > regenerate QUICKSTART.md > git push
+Rule: Work is not done until pushed AND tracking files updated.
+
+## Skills
+<!-- Run /compound:discover to scan available skills and add to this project -->
+(none configured)
+
+## Tools & MCPs
+<!-- Populated during skill discovery or when tools are added -->
+(none configured)
+
+## Project Rules
+<!-- Add as the project evolves -->
+(none yet)
+AGENTSEOF
+fi
+
+# Create .compound-beads/skills/ directory for per-project skill copies (v3.0)
+echo -e "${GREEN}Creating skills directory...${NC}"
+mkdir -p .compound-beads/skills
+
 # Success message
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║  Compound Beads initialized!           ║${NC}"
+echo -e "${GREEN}║  Compound Beads v3.0 initialized!      ║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "Created:"
 echo -e "  ${BLUE}CLAUDE.md${NC} - Agent handoff document"
+echo -e "  ${BLUE}AGENTS.md${NC} - Passive context layer (v3.0)"
 echo -e "  ${BLUE}.claude/commands/${NC} - Slash commands"
 echo -e "  ${BLUE}.claude/context/${NC} - Learnings & decisions"
 echo -e "  ${BLUE}.claude/plans/${NC} - Plan files"
+echo -e "  ${BLUE}.compound-beads/skills/${NC} - Per-project skill copies"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
 echo -e "  1. Edit CLAUDE.md with your project details"
-echo -e "  2. Start Claude Code and run /ready"
+echo -e "  2. Start Claude Code and run /compound:discover to add skills"
 echo -e "  3. Begin Round 1!"
 echo ""

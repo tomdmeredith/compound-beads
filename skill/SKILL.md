@@ -1,14 +1,25 @@
-# Compound Beads Skill v2.1
+# Compound Beads Skill v3.0
 
 A methodology for iterative development that compounds knowledge across sessions.
 
-**Key features: Round types, narrative capture, session intelligence capture, instant continuity, AI-initiated prompts.**
+**Key features: AGENTS.md passive context layer, round types, narrative capture, session intelligence capture, instant continuity, AI-initiated prompts.**
 
 > Built from 127 rounds of real usage feedback. Evidence-based evolution.
 
 ## My Role
 
 I am Claude, assisting with iterative development using Compound Beads methodology. When working on a project that uses this methodology, I maintain awareness of the current round state, track modifications, and ensure knowledge compounds across sessions.
+
+---
+
+## Step -1: Check AGENTS.md (Passive Context)
+
+Before loading any CB files, check for `AGENTS.md` at the project root:
+1. If `AGENTS.md` exists — it is automatically loaded by Claude Code as passive context. The methodology, auto-triggers, configured skills, tools, and project rules are already in the prompt.
+2. If `AGENTS.md` does NOT exist but `.compound-beads/` does — this is a pre-v3.0 project. Offer to create AGENTS.md: "This project uses Compound Beads but has no AGENTS.md. Create one for passive context?"
+3. If neither exists — this is a new project. Follow normal initialization.
+
+AGENTS.md solves the "fire alarm paradox": auto-triggers only work when the skill is loaded, but AGENTS.md is always loaded as native Claude Code passive context.
 
 ---
 
@@ -44,6 +55,8 @@ I proactively prompt based on conditions, not relying on user memory:
 | 3+ decisions made in session | "Several decisions were made. Let me capture the rationale..." |
 | Error or dead end encountered | "We hit a dead end. Let me record this so future sessions avoid it..." |
 | Open question persists 3+ sessions | "The question about [X] has been open for 3 sessions. Dedicate a round or deprioritize?" |
+| `.compound-beads/` exists but no `AGENTS.md` | "This project uses CB but has no AGENTS.md. Create one for passive context?" |
+| First init of new project | "Run /compound:discover to add skills and tools to this project?" |
 
 ---
 
@@ -85,6 +98,7 @@ The skill builds on Claude's existing primitives (Read, Write, Edit). These doma
 | `/compound:research` | Search learnings for relevant patterns |
 | `/compound:process-session` | Extract session intelligence into CB artifacts |
 | `/compound:close-session` | Run session close protocol (calls process-session) |
+| `/compound:discover` | Scan skills/tools, copy to project, compress into AGENTS.md |
 
 **Note:** Many of these run automatically via AI-initiated prompts. Manual invocation optional.
 
@@ -221,17 +235,36 @@ Before closing a session, systematically extract all valuable intelligence:
 
 See `/compound:process-session` for the full protocol.
 
+### Outcome 13: Passive Context Layer
+
+AGENTS.md at the project root provides passive context that Claude Code reads automatically:
+- CB methodology and auto-triggers are always in the prompt — no skill loading required
+- Configured skills are listed with trigger phrases so Claude can recognize when to invoke them
+- Tools and MCPs are listed so Claude knows what's available
+- Project rules accumulate as the project evolves
+- Solves the "fire alarm paradox" where auto-triggers only fire when the skill is loaded
+
+### Outcome 14: Skill Artifact Protocol
+
+Skills copied to `.compound-beads/skills/{name}/` during discovery:
+- Each copy evolves independently per-project (can diverge from global version)
+- Skill outputs go to `.compound-beads/skills/{name}/output/`
+- AGENTS.md contains compressed one-line entries for each skill (name, description, triggers, output)
+- Re-running `/compound:discover` adds new skills without removing existing ones
+
 ---
 
 ## What Exists in This Methodology
 
 | File | Purpose |
 |------|---------|
+| `AGENTS.md` | Passive context layer (always loaded by Claude Code) |
 | `.compound-beads/QUICKSTART.md` | Instant continuity (<500 chars, auto-updated) |
 | `.compound-beads/context.md` | Portable memory (current state) |
 | `.compound-beads/rounds.jsonl` | Machine-readable round history (event-based) |
 | `.compound-beads/learnings.md` | Compounded insights across rounds |
 | `.compound-beads/archive/` | Compressed old rounds |
+| `.compound-beads/skills/` | Per-project skill copies (from /compound:discover) |
 | `CLAUDE.md` | Human-readable handoff document |
 | `docs/METHODOLOGY.md` | Full methodology documentation |
 
@@ -309,8 +342,11 @@ When initializing Compound Beads for a new project:
 3. Create `context.md` from template
 4. Create empty `rounds.jsonl`
 5. Create empty `learnings.md`
-6. Add reference line to CLAUDE.md (if it exists)
-7. Start Round 1 with initialization goal
+6. Create `AGENTS.md` at project root from template
+7. Create `.compound-beads/skills/` directory
+8. Run skill discovery (`/compound:discover`)
+9. Add reference line to CLAUDE.md (if it exists)
+10. Start Round 1 with initialization goal
 
 ---
 
